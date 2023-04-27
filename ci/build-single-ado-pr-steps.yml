@@ -31,7 +31,8 @@ steps:
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps
 
-- bash:  | 
+- bash:  |
+    set -x
     cd azure-pipelines-tasks
     npm install
     cd ../azure-pipelines-tasks/ci/courtesy-push
