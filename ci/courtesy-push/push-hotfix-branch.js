@@ -64,7 +64,7 @@ function copyHotFixFiles(hotfixFolderPath) {
 async function commitAzureDevOpsChanges(pathToAdoRepo, taskName) {
   const currentSprint = await getCurrentSprint();
   const gitUrl = `https://${process.env.TOKEN}@dev.azure.com/v-mazayt0/AzureDevOps/_git/AzureDevOps`;
-  const branch = `users/${username}/m${currentSprint}/${taskName}-UpdateUnifiedDeps-new9`;
+  const branch = `users/${username}/m${currentSprint}/${taskName}-UpdateUnifiedDeps-new10`;
   console.log(`##vso[task.setVariable variable=hotFixBranch]${branch}`);
   const pathToUnifiedDependencies = path.join('.nuget', 'externals', 'UnifiedDependencies.xml');
   const commitMessage = `Update UnifiedDependencies.xml for ${taskName}`;

@@ -37,8 +37,9 @@ steps:
     npm install
     cd ../azure-pipelines-tasks/ci/courtesy-push
     npm install
-    node create-hotfix-branch.js
-    # node open-hotfix-pr.js $repositoryId $hotfixBranch $taskName
+    node push-hotfix-branch.js
+    node open-hotfix-pr.js AzureDevOps "${{ parameters.task_name }}" "$(username)"
+  # $repositoryId $hotfixBranch $taskName
   env:
     TOKEN: $(AzDoToken)
     REPOSITORY: "AzureDevOps"
