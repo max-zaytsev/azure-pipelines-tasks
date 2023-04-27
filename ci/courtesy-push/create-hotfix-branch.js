@@ -27,10 +27,10 @@ async function getCurrentSprint() {
 }
 
 function commitChanges(directory, pathToAdd, gitUrl, branch, commitMessage) {
-  // execInForeground(`${GIT} add ${pathToAdd}`, directory);
-  // gitConfig();
-  // execInForeground(`${GIT} checkout -b ${branch}`, directory);
-  // execInForeground(`${GIT} commit -m "${commitMessage}" `, directory);
+  execInForeground(`${GIT} add ${pathToAdd}`, directory);
+  gitConfig();
+  execInForeground(`${GIT} checkout -b ${branch}`, directory);
+  execInForeground(`${GIT} commit -m "${commitMessage}" `, directory);
   execInForeground(`${GIT} push --set-upstream ${gitUrl} ${branch}`, directory);
 }
 
@@ -64,7 +64,7 @@ function copyHotFixFiles(hotfixFolderPath) {
 async function commitAzureDevOpsChanges(pathToAdoRepo, taskName) {
   const currentSprint = await getCurrentSprint();
   const gitUrl = `https://${process.env.TOKEN}@dev.azure.com/v-mazayt0/AzureDevOps/_git/AzureDevOps`;
-  const branch = `users/${username}/m${currentSprint}/${taskName}-UpdateUnifiedDeps-new8`;
+  const branch = `users/${username}/m${currentSprint}/${taskName}-UpdateUnifiedDeps-new9`;
   console.log(`##vso[task.setVariable variable=hotFixBranch]${branch}`);
   const pathToUnifiedDependencies = path.join('.nuget', 'externals', 'UnifiedDependencies.xml');
   const commitMessage = `Update UnifiedDependencies.xml for ${taskName}`;
