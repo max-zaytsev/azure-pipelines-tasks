@@ -35,7 +35,13 @@ steps:
 #   displayName: Update unified deps
 
 # returns currentSprint
-- template: set-current-sprint-variable.yml
+#- template: set-current-sprint-variable.yml
+
+- powershell: |
+    $currentSprint = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json)
+    Write-Host ##vso[task.setVariable variable=currentSprint]$currentSprint.sprint
+    Write-Host ##vso[task.setVariable variable=currentSprintWeek]$currentSprint.week
+  displayName: Set current sprint variable
 
 - powershell: |
     Write-Host $(currentSprint)
