@@ -1,18 +1,18 @@
-const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
-var util = require('../../make-util');
 
 const token = process.env.TOKEN;
 const repository = process.env.REPOSITORY// || 'AzureDevOps.ConfigChange';
 const taskName = process.env.TASK_NAME// || 'BashV3';
 const username = process.env.USERNAME// || 'v-mazayt';
 const branch = process.env.BRANCH// || 'some-1';
-const sourcesDir = process.env['BUILD_SOURCESDIRECTORY'] //|| 'D:\\GIT' ||  '/Users/krolikroger/Documents/git';
+const sourcesDir = process.env['BUILD_SOURCESDIRECTORY']// || 'D:\\GIT' ||  '/Users/krolikroger/Documents/git';
+const hotfixFolder = process.argv[2]// || 'D:\\GIT';
 
 const GIT = 'git';
+const gitUrl = `https://${token}@dev.azure.com/mseng/AzureDevOps/_git/${repository}`;
 
-function commitChanges(directory, pathToAdd, gitUrl, commitMessage) {
+function commitChanges(directory, pathToAdd, commitMessage) {
   execInForeground(`${GIT} add ${pathToAdd}`, directory);
   gitConfig();
   execInForeground(`${GIT} checkout -b ${branch}`, directory);
@@ -33,47 +33,29 @@ function execInForeground(command, directory, dryrun = false) {
   }
 }
 
-// function copyHotFixFiles(hotfixFolderPath) {
-//   const src = path.join(sourcesDir, 'hotfixArtifact', 'hotfix');
-//   console.log(src);
-//   const dest = path.join(sourcesDir, 'AzureDevOps.ConfigChange', hotfixFolderPath);
-//   console.log(dest);
-//   var res = fs.existsSync(dest);
-//   if (!fs.existsSync(dest)) {
-//     fs.mkdirSync(dest);
-//   }
-
-//   util.cp('-rf', `${src}/*`, dest);
-//   return dest;
-// }
-
 async function commitAzureDevOpsChanges(pathToAdoRepo) {
-  const gitUrl = `https://${token}@dev.azure.com/v-mazayt0/AzureDevOps/_git/AzureDevOps`;
   const unifiedDepsPath = path.join('.nuget', 'externals', 'UnifiedDependencies.xml');
   const commitMessage = `Update UnifiedDependencies.xml`;
-  commitChanges(pathToAdoRepo, unifiedDepsPath, gitUrl, commitMessage);
+  commitChanges(pathToAdoRepo, unifiedDepsPath, commitMessage);
 }
 
-async function commitConfigChangeChanges(pathToCCRepo, taskName) {
-  const gitUrl = `https://${token}@dev.azure.com/v-mazayt0/AzureDevOps/_git/AzureDevOps.ConfigChange`;
-  const hotfixFolder = process.argv[2];
+async function commitConfigChangeChanges(pathToCCRepo) {
   if (!hotfixFolder) {
       throw new Error('No hotfixFolder provided');
   }
-  // copyHotFixFiles(pathToHotfixFolder);
 
   commitMessage = `Hotfix tasks: ${taskName}`;
-  commitChanges(pathToCCRepo, hotfixFolder, gitUrl, commitMessage);
+  commitChanges(pathToCCRepo, hotfixFolder, commitMessage);
 }
 
 function main() {
   const pathToRepo = path.join(sourcesDir, repository);
   if (repository === 'AzureDevOps') {
-    commitAzureDevOpsChanges(pathToRepo, taskName);
+    commitAzureDevOpsChanges(pathToRepo);
   }
 
   if (repository === 'AzureDevOps.ConfigChange') {
-    commitConfigChangeChanges(pathToRepo, taskName);
+    commitConfigChangeChanges(pathToRepo);
   }
 }
 
