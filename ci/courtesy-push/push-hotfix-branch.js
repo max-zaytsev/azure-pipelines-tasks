@@ -10,7 +10,7 @@ const sourcesDir = process.env['BUILD_SOURCESDIRECTORY']// || 'D:\\GIT' ||  '/Us
 const hotfixFolder = process.argv[2]// || 'D:\\GIT';
 
 const GIT = 'git';
-const gitUrl = `https://${token}@dev.azure.com/mseng/AzureDevOps/_git/${repository}`;
+const gitUrl = `https://${token}@dev.azure.com/v-mazayt0/AzureDevOps/_git/${repository}`;
 
 function commitChanges(directory, pathToAdd, commitMessage) {
   execInForeground(`${GIT} add ${pathToAdd}`, directory);
