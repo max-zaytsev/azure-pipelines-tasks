@@ -44,14 +44,10 @@ steps:
     currentSprint: "$(currentSprint)"
 
 - powershell:  |
-    cd azure-pipelines-tasks
-    npm install npm install
-    Write-Host $(branchName)
-    cd ../azure-pipelines-tasks/ci/courtesy-push
-    npm install
-
+    cd azure-pipelines-tasks/ci/courtesy-push
     node push-hotfix-branch.js
     node open-hotfix-pr.js
+  displayName: Create PR
   env:
     TOKEN: $(AzDoToken)
     TASK_NAME: ${{ parameters.task_name }}
