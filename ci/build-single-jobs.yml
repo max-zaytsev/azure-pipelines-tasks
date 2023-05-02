@@ -30,26 +30,26 @@ jobs:
 #       parameters:
 #         task_name: ${{ parameters.task_name }}
 
-# - ${{ if parameters.push_to_feed }}:
-#   # Build Single Task and push to nuget feed
-#   - job: build_and_push_single_task
-#     displayName: Build a nuget package
-#     pool:
-#       vmImage: windows-2022
-#     steps:
-#     - template: build-single-steps.yml
-#       parameters:
-#         task: ${{ parameters.task_name }}
-#         push: true
+- ${{ if parameters.push_to_feed }}:
+  # Build Single Task and push to nuget feed
+  - job: build_and_push_single_task
+    displayName: Build a nuget package
+    pool:
+      vmImage: windows-2022
+    steps:
+    - template: build-single-steps.yml
+      parameters:
+        task: ${{ parameters.task_name }}
+        push: true
 
-  - ${{ if parameters.generate_prs }}:
-    # Create PR in AzureDevOps to update UnifiedDependencies.xml
-    - job: create_ado_pr
-      displayName: Update UnifiedDependencies.xml
-      #dependsOn: build_and_push_single_task
-      pool:
-        vmImage: windows-2022
-      steps:
-      - template: build-single-ado-pr-steps.yml
-        parameters:
-          task_name: ${{ parameters.task_name }}
+  # - ${{ if parameters.generate_prs }}:
+  #   # Create PR in AzureDevOps to update UnifiedDependencies.xml
+  #   - job: create_ado_pr
+  #     displayName: Update UnifiedDependencies.xml
+  #     #dependsOn: build_and_push_single_task
+  #     pool:
+  #       vmImage: windows-2022
+  #     steps:
+  #     - template: build-single-ado-pr-steps.yml
+  #       parameters:
+  #         task_name: ${{ parameters.task_name }}
