@@ -35,7 +35,7 @@ steps:
   displayName: Update unified deps
 
 # returns currentSprint
-- template: set-current-sprint-variable
+- template: set-current-sprint-variable.yml
 
 # returns branchName
 - template: generate-branch-name

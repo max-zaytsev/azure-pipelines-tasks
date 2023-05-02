@@ -34,7 +34,7 @@ steps:
     downloadPath: hotfixArtifact
   displayName: Download hotfix Artifact
 
-- template: set-current-sprint-variable
+- template: set-current-sprint-variable.yml
 
 - template: generate-branch-name
   parameters:
