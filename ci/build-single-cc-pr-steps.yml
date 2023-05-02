@@ -24,16 +24,16 @@ steps:
 #     npm install
 #   displayName: npm install
   
-# - task: DownloadBuildArtifacts@0
-#   inputs:
-#     buildType: specific
-#     project: TestProject
-#     buildVersionToDownload: specific
-#     buildId: 822
-#     pipeline: FORK-TASKS
-#     artifactName: hotfix
-#     downloadPath: hotfixArtifact
-#   displayName: Download hotfix Artifact
+- task: DownloadBuildArtifacts@0
+  inputs:
+    buildType: specific
+    project: TestProject
+    buildVersionToDownload: specific
+    buildId: 822
+    pipeline: FORK-TASKS
+    artifactName: hotfix
+    downloadPath: hotfixArtifact
+  displayName: Download hotfix Artifact
 
 - template: set-current-sprint-variable.yml
 
