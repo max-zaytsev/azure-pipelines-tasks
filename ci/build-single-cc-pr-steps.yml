@@ -43,7 +43,8 @@ steps:
     currentSprint: '$(currentSprint)'
 
 - powershell: |
-    $hotfixFolderPath = "tfs/m$(currentSprint)/${{ parameters.task_name }}-hotfix"
+    $currentDate = Get-Date -Format "yyyyMMdd-HHmm"
+    $hotfixFolderPath = "tfs/m$(currentSprint)/tasksHotFix-${{ parameters.task_name }}-$currentDate"
     Write-Host $hotfixFolderPath
     Copy-Item -Path hotfixArtifact/hotfix -Destination AzureDevOps.ConfigChange/$hotfixFolderPath -Recurse
     Write-Host "##vso[task.setVariable variable=hotfixFolderPath]$hotfixFolderPath"
