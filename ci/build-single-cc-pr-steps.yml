@@ -35,12 +35,14 @@ steps:
     downloadPath: hotfixArtifact
   displayName: Download hotfix Artifact
 
+# returns currentSprint
 - template: set-current-sprint-variable.yml
 
+# returns branchName
 - template: generate-branch-name.yml
   parameters:
     postfix: hotfix
-    currentSprint: "$(currentSprint)"
+    currentSprint: '$(currentSprint)'
 
 - powershell: |
     $hotfixFolderPath = "tfs/m$(currentSprint)/${{ parameters.task_name }}-hotfix"
@@ -50,7 +52,7 @@ steps:
   displayName: Move HotFix files
 
 - bash: |
-    Write-Host $(branchName)
+    echo $(branchName)
     cd azure-pipelines-tasks/ci/courtesy-push
     npm install
     node push-hotfix-branch.js "$(hotfixFolderPath)"
