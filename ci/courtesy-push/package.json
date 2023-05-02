@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "azure-devops-node-api": "12.0.0",
-    "got": "11.8.6"
+    "azure-devops-node-api": "12.0.0"
   }
 }

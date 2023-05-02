@@ -1,0 +1,14 @@
+parameters:
+- name: postfix
+  type: string
+- name: currentSprint
+  type: string
+
+steps:
+- powershell: |
+    $currentDate = Get-Date -Format "yyyyMMdd-HHmm"
+    $branchName = "users/$(username)/m${currentSprint}-${currentDate}/${{postfix}}"
+    Write-Host $branchName
+    Write-Host ##vso[task.setVariable variable=currentSprint]$currentSprint
+    Write-Host ##vso[task.setVariable variable=branchName]$branchName
+  displayName: Generate branch name

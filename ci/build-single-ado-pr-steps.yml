@@ -2,7 +2,6 @@ parameters:
 - name: task_name
   type: string
 
-
 steps:
 - checkout: self
   fetchDepth: 1
@@ -16,6 +15,11 @@ steps:
   inputs:
     versionSpec: 10.x
 
+- script: |
+    cd azure-pipelines-tasks
+    npm install npm install
+  displayName: npm install
+  
 - task: DownloadBuildArtifacts@0
   inputs:
     buildType: specific
@@ -30,60 +34,24 @@ steps:
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps
 
-# - powershell: |
-#     # Build the release branch name
-#     $currentSprint = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
-#     $releaseBranch = "users/$(username)/m" + $currentSprint + "/courtesyPush"
-#     Write-Host ##vso[task.setVariable variable=hotFixBranch]
-#   displayName: Generate branch name
+# returns currentSprint
+- template: set-current-sprint-variable
+
+# returns branchName
+- template: generate-branch-name
+  parameters:
+    postfix: hotfix
+    currentSprint: $(currentSprint)
 
 - powershell:  |
-    cd azure-pipelines-tasks
-    npm install
+    Write-Host $(branchName)
     cd ../azure-pipelines-tasks/ci/courtesy-push
     npm install
+
     node push-hotfix-branch.js
+    node open-hotfix-pr.js
   env:
     TOKEN: $(AzDoToken)
-    REPOSITORY: "AzureDevOps"
-    TASK_NAME: "${{ parameters.task_name }}"
-    USERNAME: "$(username)"
-
-- powershell:  |
-    echo $(hotFixBranch)
-    node open-hotfix-pr.js AzureDevOps "$(hotFixBranch)" "$(username)"
-  env:
-    TOKEN: $(AzDoToken)
-    REPOSITORY: "AzureDevOps"
-    TASK_NAME: "${{ parameters.task_name }}"
-    USERNAME: "$(username)"
-
-# - powershell: |
-
-#     $gitUrl = "https://$(AzDoToken)@dev.azure.com/v-mazayt0/AzureDevOps/_git/AzureDevOps"
-#     $repositoryId = "AzureDevOps"
-
-#     node azure-pipelines-tasks\ci\courtesy-push\create-hotfix-branch.js
-
-#     Write-Host "Pushing hotfixBranch to AzureDevOps"
-#     cd AzureDevOps
-#     git checkout -b $hotfixBranch
-#     git config --global user.email "$(username)@microsoft.com"
-#     git config --global user.name "$(username)"
-
-#     git add .nuget\externals\UnifiedDependencies.xml
-    
-#     git commit -m "Courtesy bump of tasks"
-#     git push $gitUrl $hotfixBranch --force
-
-#     Write-Host "Creating Pull Request"
-#     cd ..\azure-pipelines-tasks\ci\courtesy-push
-#     npm install
-#     node open-hotfix-pr.js $repositoryId $hotfixBranch $taskName
-#   displayName: Create PR in Azure DevOps
-#   env:
-#     TOKEN: $(AzDoToken)
-#     REPOSITORY: "AzureDevOps"
-#     TASK_NAME: "${{ parameters.task_name }}"
-#     USERNAME: "$(username)"
-#   enabled: false
+    TASK_NAME: ${{ parameters.task_name }}
+    REPOSITORY: AzureDevOps
+    BRANCH: $(branchName)

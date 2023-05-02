@@ -1,32 +1,23 @@
 const fs = require('fs');
 const path = require('path');
-const got = require('got');
 const cp = require('child_process');
 var util = require('../../make-util');
 
-const repository = process.env.REPOSITORY || 'AzureDevOps';
-const taskName = process.env.TASK_NAME || 'BashV3';
-const username = process.env.USERNAME || 'v-mazayt';
-const sourcesDir = process.env['BUILD_SOURCESDIRECTORY'] || '/Users/krolikroger/Documents/git';
-const GIT = 'git';
-
-/**
- * Queries whatsprintis.it for current sprint version
- *
- * @throws An error will be thrown if the response does not contain a sprint version as a three-digit numeric value
- * @returns current sprint version
- */
-async function getCurrentSprint() {
-  const response = await got.get('https://whatsprintis.it/?json', { responseType: 'json' });
-  const sprint = response.body.sprint;
-
-  if (!/^\d\d\d$/.test(sprint)) {
-    throw new Error(`Sprint must be a three-digit number; received: ${sprint}`);
-  }
-  return sprint;
+const token = process.env.TOKEN;
+const repository = process.env.REPOSITORY// || 'AzureDevOps.ConfigChange';
+const taskName = process.env.TASK_NAME// || 'BashV3';
+const username = process.env.USERNAME// || 'v-mazayt';
+const branch = process.env.BRANCH// || 'some-1';
+const sourcesDir = process.env['BUILD_SOURCESDIRECTORY'] //|| 'D:\\GIT' ||  '/Users/krolikroger/Documents/git';
+ 
+const hotfixFolder = process.argv[2];
+if (!hotfixFolder) {
+    throw new Error('No hotfixFolder provided');
 }
 
-function commitChanges(directory, pathToAdd, gitUrl, branch, commitMessage) {
+const GIT = 'git';
+
+function commitChanges(directory, pathToAdd, gitUrl, commitMessage) {
   execInForeground(`${GIT} add ${pathToAdd}`, directory);
   gitConfig();
   execInForeground(`${GIT} checkout -b ${branch}`, directory);
@@ -47,47 +38,39 @@ function execInForeground(command, directory, dryrun = false) {
   }
 }
 
-function copyHotFixFiles(hotfixFolderPath) {
-  const src = path.join(sourcesDir, 'hotfixArtifact', 'hotfix');
-  console.log(src);
-  const dest = path.join(sourcesDir, 'AzureDevOps.ConfigChange', hotfixFolderPath);
-  console.log(dest);
-  var res = fs.existsSync(dest);
-  if (!fs.existsSync(dest)) {
-    fs.mkdirSync(dest);
-  }
+// function copyHotFixFiles(hotfixFolderPath) {
+//   const src = path.join(sourcesDir, 'hotfixArtifact', 'hotfix');
+//   console.log(src);
+//   const dest = path.join(sourcesDir, 'AzureDevOps.ConfigChange', hotfixFolderPath);
+//   console.log(dest);
+//   var res = fs.existsSync(dest);
+//   if (!fs.existsSync(dest)) {
+//     fs.mkdirSync(dest);
+//   }
 
-  util.cp('-rf', `${src}/*`, dest);
-  return dest;
-}
+//   util.cp('-rf', `${src}/*`, dest);
+//   return dest;
+// }
 
-async function commitAzureDevOpsChanges(pathToAdoRepo, taskName) {
-  const currentSprint = await getCurrentSprint();
-  const gitUrl = `https://${process.env.TOKEN}@dev.azure.com/v-mazayt0/AzureDevOps/_git/AzureDevOps`;
-  const branch = `users/${username}/m${currentSprint}/${taskName}-UpdateUnifiedDeps-new11`;
-  console.log(`##vso[task.setVariable variable=hotFixBranch]${branch}`);
-  const pathToUnifiedDependencies = path.join('.nuget', 'externals', 'UnifiedDependencies.xml');
-  const commitMessage = `Update UnifiedDependencies.xml for ${taskName}`;
-  commitChanges(pathToAdoRepo, pathToUnifiedDependencies, gitUrl, branch, commitMessage);
+async function commitAzureDevOpsChanges(pathToAdoRepo) {
+  const gitUrl = `https://${token}@dev.azure.com/v-mazayt0/AzureDevOps/_git/AzureDevOps`;
+  const unifiedDepsPath = path.join('.nuget', 'externals', 'UnifiedDependencies.xml');
+  const commitMessage = `Update UnifiedDependencies.xml`;
+  commitChanges(pathToAdoRepo, unifiedDepsPath, gitUrl, commitMessage);
 }
 
 async function commitConfigChangeChanges(pathToCCRepo, taskName) {
-  const currentSprint = await getCurrentSprint();
-  const pathToHotfixFolder = path.join('tfs', `m${currentSprint}`, `${taskName}`);
+  const gitUrl = `https://${token}@dev.azure.com/v-mazayt0/AzureDevOps/_git/AzureDevOps.ConfigChange`;
+  const pathToHotfixFolder = hotfixFolder;
 
-  copyHotFixFiles(pathToHotfixFolder);
-
-  const branch = `users/${username}/m${currentSprint}/${taskName}/Hotfix`;
-  console.log(`##vso[task.setVariable variable=hotFixBranch]${branch}`);
+  // copyHotFixFiles(pathToHotfixFolder);
 
   commitMessage = `Hotfix tasks: ${taskName}`;
-  commitChanges(pathToCCRepo, pathToHotfixFolder, branch, commitMessage);
+  commitChanges(pathToCCRepo, pathToHotfixFolder, gitUrl, commitMessage);
 }
 
 function main() {
-  console.log(sourcesDir + ' ' + repository);
   const pathToRepo = path.join(sourcesDir, repository);
-
   if (repository === 'AzureDevOps') {
     commitAzureDevOpsChanges(pathToRepo, taskName);
   }

@@ -1,24 +1,9 @@
 const azdev = require('azure-devops-node-api');
 
 const token = process.env.TOKEN;
-if (!token) {
-    throw new Exception('No token provided');
-}
-
-const azureDevOpsRepoId = process.argv[2];
-if (!azureDevOpsRepoId) {
-    throw new Exception('No release branch provided');
-}
-
-const releaseBranch = process.argv[3];
-if (!releaseBranch) {
-    throw new Exception('No release branch provided');
-}
-
-const taskName = process.argv[4];
-if (!taskName) {
-    throw new Exception('No description provided');
-}
+const azureDevOpsRepoId = process.env.REPOSITORY// || 'AzureDevOps';
+const taskName = process.env.TASK_NAME// || 'BashV3';
+const branch = process.env.BRANCH// || 'Users/krolikroger/Documents/git';
 
 const orgUrl = 'https://dev.azure.com/v-mazayt0'; 
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
@@ -27,7 +12,7 @@ const authHandler = azdev.getPersonalAccessTokenHandler(token);
 const project = 'AzureDevOps';
 
 const refs = {
-    sourceRefName: `refs/heads/${releaseBranch}`,
+    sourceRefName: `refs/heads/${branch}`,
     targetRefName: 'refs/heads/master'
 };
 
