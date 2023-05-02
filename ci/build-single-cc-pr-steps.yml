@@ -46,7 +46,7 @@ steps:
     $hotfixFolderPath = "tfs/m$(currentSprint)/${{ parameters.task_name }}-hotfix"
     Write-Host $hotfixFolderPath
     Copy-Item -Path hotfixArtifact/hotfix -Destination AzureDevOps.ConfigChange/$hotfixFolderPath -Recurse
-    Write-Host ##vso[task.setVariable variable=hotfixFolderPath]$hotfixFolderPath
+    Write-Host "##vso[task.setVariable variable=hotfixFolderPath]$hotfixFolderPath"
   displayName: Move HotFix files
 
 - bash: |
