@@ -30,6 +30,13 @@ steps:
 - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
   displayName: Update unified deps
 
+# - powershell: |
+#     # Build the release branch name
+#     $currentSprint = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
+#     $releaseBranch = "users/$(username)/m" + $currentSprint + "/courtesyPush"
+#     Write-Host ##vso[task.setVariable variable=hotFixBranch]
+#   displayName: Generate branch name
+
 - powershell:  |
     cd azure-pipelines-tasks
     npm install
