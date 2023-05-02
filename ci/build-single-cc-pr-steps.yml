@@ -50,7 +50,7 @@ steps:
     Write-Host "##vso[task.setVariable variable=hotfixFolderPath]$hotfixFolderPath"
   displayName: Move HotFix files
 
-- bash: |
+- powershell: |
     echo $(branchName)
     cd azure-pipelines-tasks/ci/courtesy-push
     npm install
@@ -70,3 +70,4 @@ steps:
   displayName: Create Release in AzureDevOps.ConfigChange
   env:
     TOKEN: $(AzDoToken)
+  condition: always()
