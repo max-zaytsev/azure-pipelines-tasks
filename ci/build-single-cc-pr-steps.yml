@@ -36,7 +36,7 @@ steps:
 
 - template: set-current-sprint-variable.yml
 
-- template: generate-branch-name
+- template: generate-branch-name.yml
   parameters:
     postfix: hotfix
     currentSprint: $(currentSprint)
