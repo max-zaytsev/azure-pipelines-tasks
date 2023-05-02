@@ -2,6 +2,9 @@ parameters:
 - name: task_name
   type: string
 
+variables:  
+  currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
+
 steps:
 - checkout: self
   fetchDepth: 1
@@ -14,8 +17,6 @@ steps:
   displayName: Use node 10
   inputs:
     versionSpec: 10.x
-
-
 
 - task: DownloadBuildArtifacts@0
   inputs:
@@ -37,6 +38,13 @@ steps:
     cd ../azure-pipelines-tasks/ci/courtesy-push
     npm install
     node push-hotfix-branch.js
+  env:
+    TOKEN: $(AzDoToken)
+    REPOSITORY: "AzureDevOps"
+    TASK_NAME: "${{ parameters.task_name }}"
+    USERNAME: "$(username)"
+
+- powershell:  |
     echo $(hotFixBranch)
     node open-hotfix-pr.js AzureDevOps "$(hotFixBranch)" "$(username)"
   env:
