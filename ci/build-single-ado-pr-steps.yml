@@ -41,7 +41,11 @@ steps:
 - template: generate-branch-name.yml
   parameters:
     postfix: hotfix
-    currentSprint: $(currentSprint)
+    currentSprint: "$(currentSprint)"
+
+- powershell: |
+    Write-Host $(currentSprint)
+  displayName: CHECk
 
 - powershell:  |
     cd azure-pipelines-tasks
