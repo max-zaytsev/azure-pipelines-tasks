@@ -9,11 +9,6 @@ const taskName = process.env.TASK_NAME// || 'BashV3';
 const username = process.env.USERNAME// || 'v-mazayt';
 const branch = process.env.BRANCH// || 'some-1';
 const sourcesDir = process.env['BUILD_SOURCESDIRECTORY'] //|| 'D:\\GIT' ||  '/Users/krolikroger/Documents/git';
- 
-const hotfixFolder = process.argv[2];
-if (!hotfixFolder) {
-    throw new Error('No hotfixFolder provided');
-}
 
 const GIT = 'git';
 
@@ -61,12 +56,14 @@ async function commitAzureDevOpsChanges(pathToAdoRepo) {
 
 async function commitConfigChangeChanges(pathToCCRepo, taskName) {
   const gitUrl = `https://${token}@dev.azure.com/v-mazayt0/AzureDevOps/_git/AzureDevOps.ConfigChange`;
-  const pathToHotfixFolder = hotfixFolder;
-
+  const hotfixFolder = process.argv[2];
+  if (!hotfixFolder) {
+      throw new Error('No hotfixFolder provided');
+  }
   // copyHotFixFiles(pathToHotfixFolder);
 
   commitMessage = `Hotfix tasks: ${taskName}`;
-  commitChanges(pathToCCRepo, pathToHotfixFolder, gitUrl, commitMessage);
+  commitChanges(pathToCCRepo, hotfixFolder, gitUrl, commitMessage);
 }
 
 function main() {
