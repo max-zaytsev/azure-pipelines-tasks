@@ -9,7 +9,6 @@ steps:
 - checkout: AzureDevOps
   fetchDepth: 1
 
-# Use node 8, npm 5
 - task: NodeTool@0
   displayName: Use node 10
   inputs:
@@ -22,11 +21,11 @@ steps:
 
 - task: DownloadBuildArtifacts@0
   inputs:
-    buildType: specific
-    buildVersionToDownload: specific
-    project: TestProject
-    buildId: 841
-    pipeline: FORK-TASKS
+    # buildType: specific
+    # buildVersionToDownload: specific
+    # project: TestProject
+    # buildId: 841
+    # pipeline: FORK-TASKS
     artifactName: IndividualNugetPackages
     downloadPath: IndividualNugetPackagesDownloaded
   displayName: Download Artifact

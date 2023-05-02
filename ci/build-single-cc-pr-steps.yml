@@ -6,13 +6,12 @@ steps:
 - checkout: self
   fetchDepth: 1
 
-- checkout: ConfigChange
-  fetchDepth: 1
-
 - checkout: AzureDevOps
   fetchDepth: 1
 
-# Use node 8, npm 5
+- checkout: ConfigChange
+  fetchDepth: 1
+
 - task: NodeTool@0
   displayName: Use node 10
   inputs:
@@ -25,11 +24,11 @@ steps:
 
 - task: DownloadBuildArtifacts@0
   inputs:
-    buildType: specific
-    project: TestProject
-    buildVersionToDownload: specific
-    buildId: 822
-    pipeline: FORK-TASKS
+    # buildType: specific
+    # project: TestProject
+    # buildVersionToDownload: specific
+    # buildId: 822
+    # pipeline: FORK-TASKS
     artifactName: hotfix
     downloadPath: hotfixArtifact
   displayName: Download hotfix Artifact
@@ -51,18 +50,16 @@ steps:
   displayName: Move HotFix files
 
 - powershell: |
-    echo $(branchName)
     cd azure-pipelines-tasks/ci/courtesy-push
     npm install
     node push-hotfix-branch.js "$(hotfixFolderPath)"
     node open-hotfix-pr.js
+  displayName: Open PR in ConfigChange
   env:
     TOKEN: $(AzDoToken)
     TASK_NAME: ${{ parameters.task_name }}
     REPOSITORY: AzureDevOps.ConfigChange
     BRANCH: '$(branchName)'
-  failOnStderr: true
-  displayName: Open PR in ConfigChange
 
 - powershell: |
     cd azure-pipelines-tasks/ci/courtesy-push
