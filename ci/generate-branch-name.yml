@@ -7,7 +7,7 @@ parameters:
 steps:
 - powershell: |
     $currentDate = Get-Date -Format "yyyyMMdd-HHmm"
-    $branchName = "users/$(username)/m${currentSprint}-${currentDate}/${{postfix}}"
+    $branchName = "users/$(username)/m${{parameters.currentSprint}}-${currentDate}/${{ parameters.postfix }}"
     Write-Host $branchName
     Write-Host ##vso[task.setVariable variable=currentSprint]$currentSprint
     Write-Host ##vso[task.setVariable variable=branchName]$branchName
