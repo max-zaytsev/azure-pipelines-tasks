@@ -15,10 +15,10 @@ steps:
   inputs:
     versionSpec: 10.x
 
-- script: |
-    cd azure-pipelines-tasks
-    npm install npm install
-  displayName: npm install
+# - script: |
+#     cd azure-pipelines-tasks
+#     npm install npm install
+#   displayName: npm install
   
 - task: DownloadBuildArtifacts@0
   inputs:
@@ -44,6 +44,8 @@ steps:
     currentSprint: $(currentSprint)
 
 - powershell:  |
+    cd azure-pipelines-tasks
+    npm install npm install
     Write-Host $(branchName)
     cd ../azure-pipelines-tasks/ci/courtesy-push
     npm install
