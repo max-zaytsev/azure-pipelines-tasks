@@ -2,17 +2,17 @@ const azdev = require('azure-devops-node-api');
 
 const token = process.env.TOKEN;
 if (!token) {
-    throw new Exception('No token provided');
+    throw new Error('No token provided');
 }
 
 const hotfixFolder = process.argv[2];
 if (!hotfixFolder) {
-    throw new Exception('No hotfixFolder provided');
+    throw new Error('No hotfixFolder provided');
 }
 
 const taskName = process.argv[3];
 if (!taskName) {
-    throw new Exception('No description provided');
+    throw new Error('No description provided');
 }
 
 const scriptPath = `${hotfixFolder}/${taskName}.ps1`
@@ -44,7 +44,8 @@ const createRelease = async () => {
     }
   };
   const release = await releaseApi.createRelease(releaseMetadata, projectName);
-  console.log(release);
+  const releaseLink = `${orgUrl}/${projectName}/_releaseProgress?_a=release-pipeline-progress&releaseId=${release.id}`;
+  console.log(`Link to the Release: ${releaseLink}`);
 };
 
 try {

@@ -37,7 +37,7 @@ const createPullRequest = async () => {
         PR = await gitApi.createPullRequest(pullRequestToCreate, azureDevOpsRepoId, project);
     }
 
-    const prLink = `${orgUrl}/${project}/_git/${project}/pullrequest/${PR.pullRequestId}`;
+    const prLink = `${orgUrl}/${project}/_git/${azureDevOpsRepoId}/pullrequest/${PR.pullRequestId}`;
     console.log(`Link to the PR: ${prLink}`);
     console.log(`##vso[task.setvariable variable=PR_ID]${PR.pullRequestId}`);
     console.log(`##vso[task.setvariable variable=PR_LINK]${prLink}`);
