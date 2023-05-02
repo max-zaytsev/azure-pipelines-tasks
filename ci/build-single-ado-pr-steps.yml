@@ -17,7 +17,7 @@ steps:
 
 - script: |
     cd azure-pipelines-tasks
-    npm install npm install
+    npm install
   displayName: npm install
   
 - task: DownloadBuildArtifacts@0
