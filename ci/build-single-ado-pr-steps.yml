@@ -3,44 +3,39 @@ parameters:
   type: string
 
 steps:
-# - checkout: self
-#   fetchDepth: 1
+- checkout: self
+  fetchDepth: 1
 
-# - checkout: AzureDevOps
-#   fetchDepth: 1
+- checkout: AzureDevOps
+  fetchDepth: 1
 
-# # Use node 8, npm 5
-# - task: NodeTool@0
-#   displayName: Use node 10
-#   inputs:
-#     versionSpec: 10.x
+# Use node 8, npm 5
+- task: NodeTool@0
+  displayName: Use node 10
+  inputs:
+    versionSpec: 10.x
 
-# - script: |
-#     cd azure-pipelines-tasks
-#     npm install npm install
-#   displayName: npm install
+- script: |
+    cd azure-pipelines-tasks
+    npm install npm install
+  displayName: npm install
   
-# - task: DownloadBuildArtifacts@0
-#   inputs:
-#     buildType: specific
-#     buildVersionToDownload: specific
-#     project: TestProject
-#     buildId: 841
-#     pipeline: FORK-TASKS
-#     artifactName: IndividualNugetPackages
-#     downloadPath: IndividualNugetPackagesDownloaded
-#   displayName: Download Artifact
+- task: DownloadBuildArtifacts@0
+  inputs:
+    buildType: specific
+    buildVersionToDownload: specific
+    project: TestProject
+    buildId: 841
+    pipeline: FORK-TASKS
+    artifactName: IndividualNugetPackages
+    downloadPath: IndividualNugetPackagesDownloaded
+  displayName: Download Artifact
 
-# - script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
-#   displayName: Update unified deps
+- script: node azure-pipelines-tasks\ci\courtesy-push\courtesy-push.js AzureDevOps IndividualNugetPackagesDownloaded\IndividualNugetPackages\unified_deps.xml
+  displayName: Update unified deps
 
 # returns currentSprint
 - template: set-current-sprint-variable.yml
-
-- powershell: |
-    Write-Host $(currentSprint)
-  displayName: CHECk
-
 
 # returns branchName
 - template: generate-branch-name.yml
