@@ -9,36 +9,33 @@ steps:
 - checkout: ConfigChange
   fetchDepth: 1
 
-- checkout: AzureDevOps
-  fetchDepth: 1
-
-# Use node 8, npm 5
-- task: NodeTool@0
-  displayName: Use node 10
-  inputs:
-    versionSpec: 10.x
-
-- script: |
-    cd azure-pipelines-tasks
-    npm install
-  displayName: npm install
+# - checkout: AzureDevOps
+#   fetchDepth: 1
   
-- task: DownloadBuildArtifacts@0
-  inputs:
-    buildType: specific
-    project: TestProject
-    buildVersionToDownload: specific
-    buildId: 822
-    pipeline: FORK-TASKS
-    artifactName: hotfix
-    downloadPath: hotfixArtifact
-  displayName: Download hotfix Artifact
+
+# # Use node 8, npm 5
+# - task: NodeTool@0
+#   displayName: Use node 10
+#   inputs:
+#     versionSpec: 10.x
+
+# - script: |
+#     cd azure-pipelines-tasks
+#     npm install
+#   displayName: npm install
+  
+# - task: DownloadBuildArtifacts@0
+#   inputs:
+#     buildType: specific
+#     project: TestProject
+#     buildVersionToDownload: specific
+#     buildId: 822
+#     pipeline: FORK-TASKS
+#     artifactName: hotfix
+#     downloadPath: hotfixArtifact
+#   displayName: Download hotfix Artifact
 
 - template: set-current-sprint-variable.yml
-
-- powershell: |
-    Write-Host $(currentSprint)
-  displayName: CHECk
 
 - template: generate-branch-name.yml
   parameters:
@@ -47,6 +44,7 @@ steps:
 
 - powershell: |
     $hotfixFolderPath = "tfs/m$(currentSprint)/${{ parameters.task_name }}-hotfix"
+    Write-Host $hotfixFolderPath
     Copy-Item -Path hotfixArtifact/hotfix -Destination AzureDevOps.ConfigChange/$hotfixFolderPath -Recurse
     Write-Host ##vso[task.setVariable variable=hotfixFolderPath]$hotfixFolderPath
   displayName: Move HotFix files
@@ -55,7 +53,7 @@ steps:
     Write-Host $(branchName)
     cd azure-pipelines-tasks/ci/courtesy-push
     npm install
-    node push-hotfix-branch.js $(hotfixFolderPath)
+    node push-hotfix-branch.js "$(hotfixFolderPath)"
     node open-hotfix-pr.js
   displayName: Open PR in ConfigChange
   env:
@@ -69,39 +67,3 @@ steps:
   displayName: Create Release in AzureDevOps.ConfigChange
   env:
     TOKEN: $(AzDoToken)
-
-# - powershell: |
-#     $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
-#     $taskName = "${{ parameters.task_name }}"
-
-
-
-#     # Build the hotfix branch name
-#     $hotfixBranch = "users/$(username)/m${currentSprint}/$taskName/taskHotFix"
-
-#     $gitUrl = "https://$(AzDoToken)@dev.azure.com/v-mazayt0/AzureDevOps/_git/AzureDevOps.ConfigChange"
-#     $repositoryId ="AzureDevOps.ConfigChange"
-
-#     # Push branch to git
-#     Write-Host "Pushing branch to AzureDevOps"
-#     cd AzureDevOps.ConfigChange
-#     git checkout -b $hotfixBranch
-#     git config --global user.email "$(username)@microsoft.com"
-#     git config --global user.name "$(username)"
-
-#     git add $hotfixFolderPath/*
-    
-#     git commit -m "Hotfix $taskName task"
-#     Write-Host 'Trying to push to the remote branch..'
-#     git push $gitUrl $hotfixBranch --force
-
-#     Write-Host "Creating Pull Request"
-#     cd ..\azure-pipelines-tasks\ci\courtesy-push
-#     npm install
-#     node open-hotfix-pr.js $repositoryId $hotfixBranch $taskName
-
-#     Write-Host "Creating Release"
-#     node create-hotfix-release.js $hotfixFolderPath $taskName
-#   displayName: Create PR in AzureDevOps.ConfigChange
-#   env:
-#     TOKEN: $(AzDoToken)
