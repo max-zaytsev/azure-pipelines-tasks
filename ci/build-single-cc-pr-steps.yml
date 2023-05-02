@@ -11,7 +11,6 @@ steps:
 
 - checkout: AzureDevOps
   fetchDepth: 1
-  
 
 # Use node 8, npm 5
 - task: NodeTool@0
@@ -23,7 +22,7 @@ steps:
     cd azure-pipelines-tasks
     npm install
   displayName: npm install
-  
+
 - task: DownloadBuildArtifacts@0
   inputs:
     buildType: specific
@@ -57,14 +56,16 @@ steps:
     npm install
     node push-hotfix-branch.js "$(hotfixFolderPath)"
     node open-hotfix-pr.js
-  displayName: Open PR in ConfigChange
   env:
     TOKEN: $(AzDoToken)
     TASK_NAME: ${{ parameters.task_name }}
     REPOSITORY: AzureDevOps.ConfigChange
-    BRANCH: "$(branchName)"
+    BRANCH: '$(branchName)'
+  failOnStderr: true
+  displayName: Open PR in ConfigChange
 
 - powershell: |
+    cd azure-pipelines-tasks/ci/courtesy-push
     node create-hotfix-release.js $(hotfixFolderPath) ${{ parameters.task_name }}
   displayName: Create Release in AzureDevOps.ConfigChange
   env:
