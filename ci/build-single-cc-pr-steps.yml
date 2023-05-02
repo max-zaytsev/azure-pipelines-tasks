@@ -39,7 +39,7 @@ steps:
 - template: generate-branch-name.yml
   parameters:
     postfix: hotfix
-    currentSprint: $(currentSprint)
+    currentSprint: "$(currentSprint)"
 
 - powershell: |
     $hotfixFolderPath = "tfs/m$(currentSprint)/${{ parameters.task_name }}-hotfix"
@@ -58,7 +58,7 @@ steps:
     TOKEN: $(AzDoToken)
     TASK_NAME: ${{ parameters.task_name }}
     REPOSITORY: AzureDevOps.ConfigChange
-    BRANCH: $(branchName)
+    BRANCH: "$(branchName)"
 
 - powershell: |
     node create-hotfix-release.js $(hotfixFolderPath) ${{ parameters.task_name }}
