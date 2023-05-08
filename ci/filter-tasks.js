@@ -186,6 +186,7 @@ var setTaskVariables = function(tasks) {
 
 var buildReason = process.env['BUILD_REASON'].toLowerCase();
 var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'];
+console.log(process.env)
 console.log(forceCourtesyPush);
 var tasks;
 
