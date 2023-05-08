@@ -185,8 +185,9 @@ var setTaskVariables = function(tasks) {
 }
 
 var buildReason = process.env['BUILD_REASON'].toLowerCase();
-var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'];
-
+var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'].toLowerCase() === 'true';
+console.log(typeof forceCourtesyPush);
+console.log(forceCourtesyPush);
 var tasks;
 
 if (buildReason == 'individualci' || buildReason == 'batchedci' || buildReason == 'schedule' || forceCourtesyPush) {
