@@ -190,7 +190,7 @@ var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'];
 var tasks;
 
 if (buildReason == 'individualci' || buildReason == 'batchedci' || buildReason == 'schedule' || forceCourtesyPush) {
-    console.log("SUCCESS");
+    console.log(typeof a);
     // If CI, we will compare any tasks that have updated versions.
     getTasksToBuildForCI().then(tasks => {
         setTaskVariables(tasks)
