@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const util = require('./ci-util');
 
-const task = process.argv[2];
+const task = "hotfix";//process.argv[2];
 
 // during CI agent checks out a commit, not a branch.
 // $(build.sourceBranch) indicates the branch name, e.g. releases/m108
