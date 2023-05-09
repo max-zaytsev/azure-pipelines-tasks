@@ -56,7 +56,7 @@ steps:
 #     searchFolder: $(System.DefaultWorkingDirectory)/testresults
 
 # Stage tasks individually into the package directory
-- script: node ./ci/stage-package.js individually
+- script: node ./ci/stage-package.js false individually
   displayName: Stage tasks individually into the package directory
 
 # # Sign task zip as nuget package
@@ -65,7 +65,7 @@ steps:
 #     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
 # Stage all the tasks into a single zip for upload
-- script: node ./ci/stage-package.js
+- script: node ./ci/stage-package.js false
   displayName: Stage all the tasks into a single zip for upload
 
 # - ${{ if not(parameters.push) }}:
