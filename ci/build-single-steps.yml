@@ -56,7 +56,7 @@ steps:
 #     searchFolder: $(System.DefaultWorkingDirectory)/testresults
 
 # Stage tasks individually into the package directory
-- script: node ./ci/stage-package.js ${{ not(parameters.push) }} individually
+- script: node ./ci/stage-package.js individually
   displayName: Stage tasks individually into the package directory
 
 # # Sign task zip as nuget package
@@ -65,22 +65,29 @@ steps:
 #     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
 # Stage all the tasks into a single zip for upload
-- script: node ./ci/stage-package.js ${{ not(parameters.push) }}
+- script: node ./ci/stage-package.js
   displayName: Stage all the tasks into a single zip for upload
 
-- ${{ if not(parameters.push) }}:
+# - ${{ if not(parameters.push) }}:
 
-  # Stage hotfix
-  - script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
-    displayName: Stage hotfix
+# Stage hotfix
+- script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
+  displayName: Stage hotfix
 
-  # Publish hotfix artifact
-  - task: PublishBuildArtifacts@1
-    displayName: Publish hotfix artifact
-    inputs:
-      pathToPublish: _package/hotfix-layout
-      artifactName: hotfix
-      publishLocation: container
+- powershell: |
+    cd _package/hotfix-layout
+    2 > .\layout-version.txt
+    Compress-Archive -Path .\layout-version.txt -DestinationPath .\${{ parameters.task }}.zip -Update
+    Remove-Item -Path .\layout-version.txt
+  displayName: Add layout-version.txt to zip
+
+# Publish hotfix artifact
+- task: PublishBuildArtifacts@1
+  displayName: Publish hotfix artifact
+  inputs:
+    pathToPublish: _package/hotfix-layout
+    artifactName: hotfix
+    publishLocation: container
 
 - ${{ if parameters.push }}:
 
