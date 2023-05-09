@@ -26,4 +26,5 @@ fs.writeFileSync(scriptPath, scriptContent);
 
 // link the non-aggregate tasks zip
 const zipDestPath = path.join(util.hotfixLayoutPath, `${task}.zip`);
-fs.linkSync(util.tasksZipPath, zipDestPath);
+// fs.linkSync(util.tasksZipPath, zipDestPath);
+fs.copyFileSync(util.tasksZipPath, zipDestPath);
