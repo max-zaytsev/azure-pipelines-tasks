@@ -33,7 +33,7 @@ steps:
 # - script: node ./ci/verifyMinAgentDemands/index.js
 #   displayName: Verify min agent demands
 
-- powershell:
+- powershell: |
     $tasks = "${{ parameters.task }}"
     $taskPattern =  "@(" + ($tasks.split(',').trim() -join ('|')) + ")"
     Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
