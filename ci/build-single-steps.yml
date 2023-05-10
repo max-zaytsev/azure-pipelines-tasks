@@ -33,18 +33,24 @@ steps:
 # - script: node ./ci/verifyMinAgentDemands/index.js
 #   displayName: Verify min agent demands
 
+- powershell:
+    $tasks = "${{ parameters.task }}"
+    $taskPattern =  "@(" + ($tasks.split(',').trim() -join ('|')) + ")"
+    Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
+  displayName: Set task_pattern
+
 # Build
-- script: node make.js build --task "${{ parameters.task }}"
+- script: node make.js build --task "$(task_pattern)"
   displayName: Build
 
 # # Check diff for task sources
-# - script: node ./ci/verify-source-changes.js "${{ parameters.task }}"
+# - script: node ./ci/verify-source-changes.js "$(task_pattern)"
 #   displayName: Verify task source changes
 
 # # Test
-# - script: node make.js test --task "${{ parameters.task }}"
+# - script: node make.js test --task "$(task_pattern)"
 #   displayName: Run tests
-# - script: node make.js testLegacy --task "${{ parameters.task }}"
+# - script: node make.js testLegacy --task "$(task_pattern)"
 #   displayName: Legacy tests with node 6
 
 # # Publish test results
@@ -71,7 +77,7 @@ steps:
 # - ${{ if not(parameters.push) }}:
 
 # Stage hotfix
-- script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
+- script: node ./ci/stage-hotfix.js "$(task_pattern)"
   displayName: Stage hotfix
 
 - powershell: |
