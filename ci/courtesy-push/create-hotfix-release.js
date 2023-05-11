@@ -1,6 +1,7 @@
 const azdev = require('azure-devops-node-api');
 
-const token = process.env.TOKEN;
+const token = "some" // process.env.TOKEN || "some";
+
 if (!token) {
     throw new Error('No token provided');
 }
@@ -28,8 +29,6 @@ const createRelease = async () => {
   console.log('Getting connection');
 
   const connection = new azdev.WebApi(orgUrl, authHandler);
-  console.log('Getting Git API');
-  const releaseApi = await connection.getReleaseApi();
 
   console.log('Creating TFS - Prod Config Change release');
 
@@ -48,10 +47,18 @@ const createRelease = async () => {
   console.log(`Link to the Release: ${releaseLink}`);
 };
 
-try {
-    createRelease();
-   // createPullRequest();
-} catch (err) {
+let connection = new azdev.WebApi(orgUrl, authHandler);
+
+connection.getReleaseApi().then(gitApi => {
+    gitApi.createPullRequest(pullRequestToCreate, azureDevOpsRepoId, project).then(res => {
+        const release = releaseApi.createRelease(releaseMetadata, projectName);
+        const releaseLink = `${orgUrl}/${projectName}/_releaseProgress?_a=release-pipeline-progress&releaseId=${release.id}`;
+        console.log(`Link to the Release: ${releaseLink}`);
+    }).catch(err => {
+        console.log(err);
+        throw err;
+    });
+}).catch(err => {
     console.log(err);
     throw err;
-}
+});
