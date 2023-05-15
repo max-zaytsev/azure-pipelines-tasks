@@ -9,8 +9,7 @@ const branch = process.env.BRANCH;
 const orgUrl = 'https://dev.azure.com/v-mazayt0';
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
 
-//const project = 'AzureDevOps';
-const project = 'TestProject';
+const project = 'AzureDevOps';
 
 const refs = {
   sourceRefName: `refs/heads/${branch}`,
