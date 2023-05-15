@@ -5,10 +5,12 @@ const azureDevOpsRepoId = process.env.REPOSITORY;
 const taskName = process.env.TASK_NAME;
 const branch = process.env.BRANCH;
 
-const orgUrl = 'https://dev.azure.com/mseng';
+//const orgUrl = 'https://dev.azure.com/mseng';
+const orgUrl = 'https://dev.azure.com/v-mazayt0';
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
 
-const project = 'AzureDevOps';
+//const project = 'AzureDevOps';
+const project = 'TestProject';
 
 const refs = {
   sourceRefName: `refs/heads/${branch}`,
