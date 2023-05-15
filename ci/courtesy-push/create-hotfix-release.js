@@ -52,8 +52,9 @@ const createRelease = async () => {
     const releaseLink = `${orgUrl}/${projectName}/_releaseProgress?_a=release-pipeline-progress&releaseId=${release.id}`;
     console.log(`Link to the Release: ${releaseLink}`);
   } catch (err) {
-    console.log('##vso[task.logissue type=error]Failed to create release');
-    console.log(err);
+    console.log('##vso[task.logissue type=error]Failed to create config change release');
+    console.error(err);
+    process.exit(1);
   }
 };
 
