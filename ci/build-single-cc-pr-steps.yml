@@ -56,7 +56,7 @@ steps:
 
 - powershell: |
     cd azure-pipelines-tasks/ci/courtesy-push
-    node create-hotfix-release.js $(hotfixFolderPath) ${{ parameters.task_name }}
+    node create-hotfix-release.js $(hotfixFolderPath) "${{ parameters.task_name }}"
   displayName: Create Release in AzureDevOps.ConfigChange
   env:
     TOKEN: $(Package.Token)
