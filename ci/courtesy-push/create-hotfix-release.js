@@ -24,7 +24,8 @@ const authHandler = azdev.getPersonalAccessTokenHandler(token);
 const orgUrl = 'https://dev.azure.com/v-mazayt0';
 const definitionId = 3; // "TFS - Prod Config Change" release definition id
 
-const projectName = 'AzureDevOps';
+//const projectName = 'AzureDevOps';
+const projectName = 'TestProject';
 
 const releaseMetadata = {
   definitionId: definitionId,
