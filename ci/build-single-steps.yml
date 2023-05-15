@@ -94,9 +94,9 @@ steps:
   - powershell: |
       cd _package/hotfix-layout
       2 > .\layout-version.txt
-      Compress-Archive -Path .\layout-version.txt -DestinationPath .\hotfix.zip -Update
+      Compress-Archive -Path .\layout-version.txt -DestinationPath .\$(hotfixName).zip -Update
       Remove-Item -Path .\layout-version.txt
-    displayName: Add layout-version.txt to hotfix.zip
+    displayName: Add layout-version.txt to hotfix zip archive
 
     # Publish hotfix artifact
   - task: PublishBuildArtifacts@1

@@ -14,6 +14,8 @@ if (numTasks > 1) {
     hotfixName = taskNames;
 }
 
+console.log('##vso[task.setVariable variable=hotfixName]' + hotfixName);
+
 // during CI agent checks out a commit, not a branch.
 // $(build.sourceBranch) indicates the branch name, e.g. releases/m108
 // assumes user has checked out a branch. this is a fairly safe assumption.
