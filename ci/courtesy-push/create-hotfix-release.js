@@ -19,9 +19,8 @@ if (!taskName) {
 const scriptPath = `${hotfixFolder}/hotfix.ps1`;
 console.log(scriptPath);
 
-const tasks = taskName.split(',')
 
-const description = `Hotfix for ${taskName.split(',')} task`;
+const description = `Hotfixing tasks: ${taskName.split(',')}`;
 
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
 const orgUrl = 'https://dev.azure.com/v-mazayt0'; // TODO - update
