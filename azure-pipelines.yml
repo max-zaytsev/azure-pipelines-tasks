@@ -24,6 +24,10 @@ parameters:
   displayName: Task Name
   type: string
   default: TaskNameVN
+- name: generate_hotfix_artifact
+  displayName: Generate Hotfix Artifact
+  type: boolean
+  default: false
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
@@ -43,6 +47,7 @@ jobs:
   - template: ci/build-single-jobs.yml
     parameters:
       task_name: ${{ parameters.task_name }}
+      generate_hotfix_artifact: ${{ parameters.generate_hotfix_artifact }}
       push_to_feed: ${{ parameters.push_to_feed }}
       generate_prs: ${{ parameters.generate_prs }}
 

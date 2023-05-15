@@ -3,6 +3,8 @@ parameters:
   type: string
 - name: push
   type: boolean
+- name: generate_hotfix_artifact
+  type: boolean
 
 steps:
 
@@ -81,24 +83,25 @@ steps:
 - script: node ./ci/stage-package.js false
   displayName: Stage all the tasks into a single zip for upload
 
+- ${{ if parameters.generate_hotfix_artifact }}:
   # Stage hotfix
-- script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
-  displayName: Stage hotfix
+  - script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
+    displayName: Stage hotfix
 
-- powershell: |
-    cd _package/hotfix-layout
-    2 > .\layout-version.txt
-    Compress-Archive -Path .\layout-version.txt -DestinationPath .\hotfix.zip -Update
-    Remove-Item -Path .\layout-version.txt
-  displayName: Add layout-version.txt to hotfix.zip
+  - powershell: |
+      cd _package/hotfix-layout
+      2 > .\layout-version.txt
+      Compress-Archive -Path .\layout-version.txt -DestinationPath .\hotfix.zip -Update
+      Remove-Item -Path .\layout-version.txt
+    displayName: Add layout-version.txt to hotfix.zip
 
-  # Publish hotfix artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish hotfix artifact
-  inputs:
-    pathToPublish: _package/hotfix-layout
-    artifactName: hotfix
-    publishLocation: container
+    # Publish hotfix artifact
+  - task: PublishBuildArtifacts@1
+    displayName: Publish hotfix artifact
+    inputs:
+      pathToPublish: _package/hotfix-layout
+      artifactName: hotfix
+      publishLocation: container
 
 - ${{ if parameters.push }}:
 

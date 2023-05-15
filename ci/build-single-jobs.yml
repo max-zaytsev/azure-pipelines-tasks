@@ -1,6 +1,8 @@
 parameters:
   - name: task_name
     type: string
+  - name: generate_hotfix_artifact
+    type: boolean
   - name: push_to_feed
     type: boolean
   - name: generate_prs
@@ -19,16 +21,17 @@ jobs:
       push: ${{ parameters.push_to_feed }}
 
 - ${{ if parameters.generate_prs }}:
-  # Create a hotfix PR and Release
-  - job: create_hotfix
-    displayName: Create HotFix PR
-    dependsOn: build_single_task
-    pool:
-      vmImage: windows-2022
-    steps: 
-    - template: build-single-cc-pr-steps.yml
-      parameters:
-        task_name: ${{ parameters.task_name }}
+  - ${{ if parameters.generate_hotfix_artifact }}:
+    # Create a hotfix PR and Release
+    - job: create_hotfix
+      displayName: Create HotFix PR
+      dependsOn: build_single_task
+      pool:
+        vmImage: windows-2022
+      steps: 
+      - template: build-single-cc-pr-steps.yml
+        parameters:
+          task_name: ${{ parameters.task_name }}
 
   - ${{ if parameters.push_to_feed }}:
     # Create PR in AzureDevOps to update UnifiedDependencies.xml
