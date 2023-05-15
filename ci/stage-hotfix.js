@@ -2,7 +2,17 @@ const fs = require('fs');
 const path = require('path');
 const util = require('./ci-util');
 
-const task = process.argv[2];
+const taskPattern = process.env["task_pattern"];
+const numTasks = process.env["numTasks"];
+
+const taskNames = util.resolveTaskList(taskPattern);
+
+let hotfixName;
+if (numTasks > 1) {
+    hotfixName = "hotfix";
+} else {
+    hotfixName = taskNames;
+}
 
 // during CI agent checks out a commit, not a branch.
 // $(build.sourceBranch) indicates the branch name, e.g. releases/m108
@@ -14,17 +24,17 @@ const commitInfo = util.run('git log -1 --format=oneline');
 
 // create the script
 fs.mkdirSync(util.hotfixLayoutPath);
-const scriptPath = path.join(util.hotfixLayoutPath, 'hotfix.ps1');
+const scriptPath = path.join(util.hotfixLayoutPath, `${hotfixName}.ps1`);
 const scriptContent = `
 # Hotfix created from branch: ${branch}
 # Commit: ${commitInfo}
-# Hotfixing tasks: ${task}
+# Hotfixing tasks: ${taskNames}
 $ErrorActionPreference='Stop'
-Update-DistributedTaskDefinitions -TaskZip $PSScriptRoot/hotfix.zip
+Update-DistributedTaskDefinitions -TaskZip $PSScriptRoot/${hotfixName}.zip
 `;
 
 fs.writeFileSync(scriptPath, scriptContent);
 
 // copy non-aggregate tasks zip
-const zipDestPath = path.join(util.hotfixLayoutPath, 'hotfix.zip');
+const zipDestPath = path.join(util.hotfixLayoutPath, `${hotfixName}.zip`);
 fs.copyFileSync(util.tasksZipPath, zipDestPath);

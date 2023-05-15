@@ -178,12 +178,23 @@ var getTasksToBuildForPR = function() {
     return toBeBuilt;
 }
 
+var getTasksToBuildForSingleSteps = function(taskParameter) {
+    var taskList = taskParameter.split(',').map(item => item.trim());
+    var missedTasks = taskList.filter(taskName => !makeOptions.tasks.includes(taskName));
+    if (missedTasks.length !== 0) {
+        console.error(`Can't find these tasks in makeOptions: ${missedTasks}.\nPlease check the spelling of the task names `);
+        process.exit(1);
+    }
+    return taskList;
+}
+
 var setTaskVariables = function(tasks) {
     console.log('tasks: ' + JSON.stringify(tasks));
     console.log('##vso[task.setVariable variable=task_pattern]@(' + tasks.join('|') + ')');
     console.log('##vso[task.setVariable variable=numTasks]' + tasks.length);
 }
 
+var taskParameter = process.argv[2];
 var buildReason = process.env['BUILD_REASON'].toLowerCase();
 var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'] && process.env['FORCE_COURTESY_PUSH'].toLowerCase() === 'true';
 
@@ -193,13 +204,15 @@ if (buildReason == 'individualci' || buildReason == 'batchedci' || buildReason =
     getTasksToBuildForCI().then(tasks => {
         setTaskVariables(tasks)
     });
+} else if (buildReason == 'pullrequest') {
+    // If PR, we will compare any tasks that could have been affected based on the diff.
+    tasks = getTasksToBuildForPR();
+    setTaskVariables(tasks);
+} else if (taskParameter) {
+    //If build single steps, check
+    tasks = getTasksToBuildForSingleSteps(taskParameter);
+    setTaskVariables(tasks);
 } else {
-    if (buildReason == 'pullrequest') {
-        // If PR, we will compare any tasks that could have been affected based on the diff.
-        tasks = getTasksToBuildForPR();
-        setTaskVariables(tasks);
-    } else {
-        // If manual or other, build everything.
-        setTaskVariables(makeOptions.tasks);
-    }
+    // If manual or other, build everything.
+    setTaskVariables(makeOptions.tasks);
 }

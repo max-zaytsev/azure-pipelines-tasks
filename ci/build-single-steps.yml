@@ -35,11 +35,14 @@ steps:
 # - script: node ./ci/verifyMinAgentDemands/index.js
 #   displayName: Verify min agent demands
 
-- powershell: |
-    $tasks = "${{ parameters.task }}"
-    $taskPattern =  "@(" + ($tasks.split(',').trim() -join ('|')) + ")"
-    Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
-  displayName: Set task_pattern
+# - powershell: |
+#     $tasks = "${{ parameters.task }}"
+#     $taskPattern =  "@(" + ($tasks.split(',').trim() -join ('|')) + ")"
+#     Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
+#   displayName: Set task_pattern
+
+- script: node ./ci/filter-tasks.js "${{ parameters.task }}"
+  displayName: Filter tasks to build and set task_pattern variable
 
 # Build
 - script: node make.js build --task "$(task_pattern)"
