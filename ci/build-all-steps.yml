@@ -41,7 +41,7 @@ steps:
 # - script: node ./ci/verifyMinAgentDemands/index.js
 #   displayName: Verify min agent demands
 
-- powershell: .\set-sprint-variables.ps1
+- powershell: .\ci\set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
 - powershell: |

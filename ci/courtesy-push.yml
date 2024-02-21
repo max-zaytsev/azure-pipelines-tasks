@@ -31,7 +31,7 @@ steps:
   displayName: Push Nuget packages
 
 # Set the currentSprint variable
-- powershell: .\set-sprint-variables.ps1
+- powershell: .\ci\set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
 - powershell: |
