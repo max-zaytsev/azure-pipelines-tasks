@@ -22,7 +22,7 @@ parameters:
 - name: task_name
   displayName: Tasks to build (e.g. BashV3 [, AzureCLIV1])
   type: string
-  default: ""
+  default: $(taskNameDefaultValue)
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
@@ -38,6 +38,7 @@ parameters:
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
+  taskNameDefaultValue: "TaskNameVN"
 
 jobs:
 
