@@ -4,7 +4,7 @@ parameters:
   - name: deploy_all_tasks
     type: boolean
 
-steps:
+# steps:
 # # Clean
 # - checkout: self
 #   clean: true
