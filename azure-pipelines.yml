@@ -22,7 +22,7 @@ parameters:
 - name: task_name
   displayName: Tasks to build (e.g. BashV3 [, AzureCLIV1])
   type: string
-  default: $(taskNameDefaultValue)
+  default: ${{ variables.taskNameDefaultValue }}
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
