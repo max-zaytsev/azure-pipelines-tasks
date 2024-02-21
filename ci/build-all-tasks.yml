@@ -5,62 +5,62 @@ parameters:
     type: boolean
 
 steps:
-# Clean
-- checkout: self
-  clean: true
+# # Clean
+# - checkout: self
+#   clean: true
 
-# Use .NET SDK 8
-- task: UseDotNet@2
-  displayName: 'Install .NET Core SDK 8.x'
-  inputs:
-    version: 8.x
+# # Use .NET SDK 8
+# - task: UseDotNet@2
+#   displayName: 'Install .NET Core SDK 8.x'
+#   inputs:
+#     version: 8.x
 
-# Use node 10, npm 6
-- task: NodeTool@0
-  displayName: Use node 10
-  inputs:
-    versionSpec: 10.24.1
+# # Use node 10, npm 6
+# - task: NodeTool@0
+#   displayName: Use node 10
+#   inputs:
+#     versionSpec: 10.24.1
 
-# npm install
-- script: npm install
-  displayName: npm install
+# # npm install
+# - script: npm install
+#   displayName: npm install
 
-# Clean
-- script: node make.js clean
-  displayName: Clean tasks
+# # Clean
+# - script: node make.js clean
+#   displayName: Clean tasks
 
-# Build tasks
-- script: node make.js serverBuild --task "$(task_pattern)"
-  displayName: Build tasks using pattern
-  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', false))
+# # Build tasks
+# - script: node make.js serverBuild --task "$(task_pattern)"
+#   displayName: Build tasks using pattern
+#   condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', false))
 
-# Build all tasks
-- script: node make.js serverBuild
-  displayName: Build all tasks
-  condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', true))
+# # Build all tasks
+# - script: node make.js serverBuild
+#   displayName: Build all tasks
+#   condition: and(succeeded(), eq('${{ parameters.deploy_all_tasks }}', true))
 
-# Stage tasks individually into the package directory
-- script: node ./ci/stage-package.js true individually
-  displayName: Stage tasks individually into the package directory
+# # Stage tasks individually into the package directory
+# - script: node ./ci/stage-package.js true individually
+#   displayName: Stage tasks individually into the package directory
 
-- script: |
-    rmdir /s /q _build
-    rmdir /s /q _package\nested-zips-layout
-  displayName: Remove _build folder to reduce space
+# - script: |
+#     rmdir /s /q _build
+#     rmdir /s /q _package\nested-zips-layout
+#   displayName: Remove _build folder to reduce space
 
-# Sign all task zips as nuget packages
-- template: sign-all-tasks.yml
-  parameters:
-    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+# # Sign all task zips as nuget packages
+# - template: sign-all-tasks.yml
+#   parameters:
+#     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
-# Stage all the tasks into a single zip for upload
-- script: node ./ci/stage-package.js true
-  displayName: Stage all the tasks into a single zip for upload
+# # Stage all the tasks into a single zip for upload
+# - script: node ./ci/stage-package.js true
+#   displayName: Stage all the tasks into a single zip for upload
 
-# Publish artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish package artifact
-  inputs:
-    pathToPublish: _package/tasks.zip
-    artifactName: allTasks
-    publishLocation: container
+# # Publish artifact
+# - task: PublishBuildArtifacts@1
+#   displayName: Publish package artifact
+#   inputs:
+#     pathToPublish: _package/tasks.zip
+#     artifactName: allTasks
+#     publishLocation: container

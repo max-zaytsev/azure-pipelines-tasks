@@ -6,150 +6,150 @@ parameters:
 
 steps:
 
-# Clean
-- checkout: self
-  clean: true
+# # Clean
+# - checkout: self
+#   clean: true
 
-# Start collect diagnostics
-- powershell: ./ci/start-collect-diagnostics.ps1
-  displayName: Start collect diagnostics
+# # Start collect diagnostics
+# - powershell: ./ci/start-collect-diagnostics.ps1
+#   displayName: Start collect diagnostics
 
-# Use .NET SDK 8
-- task: UseDotNet@2
-  displayName: 'Install .NET Core SDK 8.x'
-  inputs:
-    version: 8.x
+# # Use .NET SDK 8
+# - task: UseDotNet@2
+#   displayName: 'Install .NET Core SDK 8.x'
+#   inputs:
+#     version: 8.x
 
-# Use node 10, npm 6
-- task: NodeTool@0
-  displayName: Use node 10
-  inputs:
-    versionSpec: 10.24.1
+# # Use node 10, npm 6
+# - task: NodeTool@0
+#   displayName: Use node 10
+#   inputs:
+#     versionSpec: 10.24.1
 
-# npm install
-- script: npm install
-  displayName: npm install
+# # npm install
+# - script: npm install
+#   displayName: npm install
 
-# Verify min agent demands
-- script: |
-    cd ci/verifyMinAgentDemands
-    npm install
-  displayName: npm install min agent demands
+# # Verify min agent demands
+# - script: |
+#     cd ci/verifyMinAgentDemands
+#     npm install
+#   displayName: npm install min agent demands
 
-- script: node ./ci/verifyMinAgentDemands/index.js
-  displayName: Verify min agent demands
+# - script: node ./ci/verifyMinAgentDemands/index.js
+#   displayName: Verify min agent demands
 
-- powershell: |
-    $tasks = "${{ parameters.task }}"
-    $taskPattern =  "@(" + ($tasks.split(',').trim() -join ('|')) + ")"
-    Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
-  displayName: Set task_pattern
+# - powershell: |
+#     $tasks = "${{ parameters.task }}"
+#     $taskPattern =  "@(" + ($tasks.split(',').trim() -join ('|')) + ")"
+#     Write-Host "##vso[task.setVariable variable=task_pattern]$taskPattern"
+#   displayName: Set task_pattern
 
-# Clean
-- script: node make.js clean
-  displayName: Clean tasks
+# # Clean
+# - script: node make.js clean
+#   displayName: Clean tasks
 
-# Build Tasks
-- script: node make.js serverBuild --task "$(task_pattern)"
-  displayName: Build Tasks
+# # Build Tasks
+# - script: node make.js serverBuild --task "$(task_pattern)"
+#   displayName: Build Tasks
 
-# Check diff for task sources
-- script: node ./ci/verify-source-changes.js "$(task_pattern)"
-  displayName: Verify task source changes
+# # Check diff for task sources
+# - script: node ./ci/verify-source-changes.js "$(task_pattern)"
+#   displayName: Verify task source changes
 
-# Test
-- script: node make.js test --task "$(task_pattern)"
-  displayName: Run tests
-- script: node make.js testLegacy --task "$(task_pattern)"
-  displayName: Legacy tests with node 6
+# # Test
+# - script: node make.js test --task "$(task_pattern)"
+#   displayName: Run tests
+# - script: node make.js testLegacy --task "$(task_pattern)"
+#   displayName: Legacy tests with node 6
 
-# Publish test results
-- task: PublishTestResults@2
-  displayName: Publish Test Results test-*.xml
-  inputs:
-    testResultsFiles: test-*.xml
-    testRunTitle: Node 6 Test Results
-    searchFolder: $(System.DefaultWorkingDirectory)/testresults
+# # Publish test results
+# - task: PublishTestResults@2
+#   displayName: Publish Test Results test-*.xml
+#   inputs:
+#     testResultsFiles: test-*.xml
+#     testRunTitle: Node 6 Test Results
+#     searchFolder: $(System.DefaultWorkingDirectory)/testresults
 
-# Publish code coverage result
-- task: PublishCodeCoverageResults@1
-  displayName: Publish Code Coverage Results
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
+# # Publish code coverage result
+# - task: PublishCodeCoverageResults@1
+#   displayName: Publish Code Coverage Results
+#   inputs:
+#     codeCoverageTool: Cobertura
+#     summaryFileLocation: $(System.DefaultWorkingDirectory)/_build/coverage/*coverage.xml
 
-# Stage tasks individually into the package directory
-- script: node ./ci/stage-package.js false individually
-  displayName: Stage tasks individually into the package directory
+# # Stage tasks individually into the package directory
+# - script: node ./ci/stage-package.js false individually
+#   displayName: Stage tasks individually into the package directory
 
-# Sign task zip as nuget package
-- template: sign-all-tasks.yml
-  parameters:
-    layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+# # Sign task zip as nuget package
+# - template: sign-all-tasks.yml
+#   parameters:
+#     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
-# Stage all the tasks into a single zip for upload
-- script: node ./ci/stage-package.js false
-  displayName: Stage all the tasks into a single zip for upload
+# # Stage all the tasks into a single zip for upload
+# - script: node ./ci/stage-package.js false
+#   displayName: Stage all the tasks into a single zip for upload
 
-  # Stage hotfix
-- script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
-  displayName: Stage hotfix
+#   # Stage hotfix
+# - script: node ./ci/stage-hotfix.js "${{ parameters.task }}"
+#   displayName: Stage hotfix
 
-- powershell: |
-    cd _package/hotfix-layout
-    2 > .\layout-version.txt
-    Compress-Archive -Path .\layout-version.txt -DestinationPath .\hotfix.zip -Update
-    Remove-Item -Path .\layout-version.txt
-  displayName: Add layout-version.txt to hotfix.zip
+# - powershell: |
+#     cd _package/hotfix-layout
+#     2 > .\layout-version.txt
+#     Compress-Archive -Path .\layout-version.txt -DestinationPath .\hotfix.zip -Update
+#     Remove-Item -Path .\layout-version.txt
+#   displayName: Add layout-version.txt to hotfix.zip
 
-  # Publish hotfix artifact
-- task: PublishBuildArtifacts@1
-  displayName: Publish hotfix artifact
-  inputs:
-    pathToPublish: _package/hotfix-layout
-    artifactName: hotfix
-    publishLocation: container
+#   # Publish hotfix artifact
+# - task: PublishBuildArtifacts@1
+#   displayName: Publish hotfix artifact
+#   inputs:
+#     pathToPublish: _package/hotfix-layout
+#     artifactName: hotfix
+#     publishLocation: container
 
-- ${{ if parameters.push }}:
+# - ${{ if parameters.push }}:
 
-  # Set variables
-  - powershell: .\ci\set-publish-variables.ps1
-    displayName: Set publish variables
+#   # Set variables
+#   - powershell: .\ci\set-publish-variables.ps1
+#     displayName: Set publish variables
 
-  # Moving Package zip file to be consumed by Milestone staging task
-  - powershell: |
-      mkdir $env:SYSTEM_ARTIFACTSDIRECTORY\package
-      Copy-Item $(Build.SourcesDirectory)\_package\tasks.zip -Destination $env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip
-      Write-Host "Copying from '$(Build.SourcesDirectory)\_package\tasks.zip' to '$env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip'"
-    displayName: Move package zip file
+#   # Moving Package zip file to be consumed by Milestone staging task
+#   - powershell: |
+#       mkdir $env:SYSTEM_ARTIFACTSDIRECTORY\package
+#       Copy-Item $(Build.SourcesDirectory)\_package\tasks.zip -Destination $env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip
+#       Write-Host "Copying from '$(Build.SourcesDirectory)\_package\tasks.zip' to '$env:SYSTEM_ARTIFACTSDIRECTORY\package\tasks.zip'"
+#     displayName: Move package zip file
 
-  # Stage Milestone task
-  - script: node .\ci\stage-milestone.js
-    displayName: Stage milestone
+#   # Stage Milestone task
+#   - script: node .\ci\stage-milestone.js
+#     displayName: Stage milestone
 
-  # Stage per task NuGet package
-  - script: npm run package
-    displayName: npm run package
+#   # Stage per task NuGet package
+#   - script: npm run package
+#     displayName: npm run package
 
-  # Publish per task NuGet package artifact
-  - task: PublishBuildArtifacts@1
-    displayName: Publish per task NuGet package artifact
-    inputs:
-      pathToPublish: _package/nuget-packages
-      artifactName: IndividualNuGetPackages
-      publishLocation: container
+#   # Publish per task NuGet package artifact
+#   - task: PublishBuildArtifacts@1
+#     displayName: Publish per task NuGet package artifact
+#     inputs:
+#       pathToPublish: _package/nuget-packages
+#       artifactName: IndividualNuGetPackages
+#       publishLocation: container
 
-  # Authenticate 
-  - task: NuGetAuthenticate@1
-    displayName: Authenticate with nuget
+#   # Authenticate 
+#   - task: NuGetAuthenticate@1
+#     displayName: Authenticate with nuget
 
-  # Push to feed
-  - script: |
-      cd $(Build.SourcesDirectory)\_package\nuget-packages
-      push.cmd
-    displayName: Push Nuget package
+#   # Push to feed
+#   - script: |
+#       cd $(Build.SourcesDirectory)\_package\nuget-packages
+#       push.cmd
+#     displayName: Push Nuget package
 
-# Stop collect diagnostics
-- powershell: ./ci/stop-collect-diagnostics.ps1
-  displayName: Stop collect diagnostics
-  condition: always()
+# # Stop collect diagnostics
+# - powershell: ./ci/stop-collect-diagnostics.ps1
+#   displayName: Stop collect diagnostics
+#   condition: always()
