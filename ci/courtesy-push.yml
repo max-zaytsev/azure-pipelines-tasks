@@ -30,9 +30,13 @@ steps:
     push.cmd
   displayName: Push Nuget packages
 
+# Set the currentSprint variable
+- powershell: set-sprint-variables.ps1
+  displayName: Set currentSprint variables
+
 - powershell: |
     # Build the release branch name
-    $currentSprint = (Invoke-WebRequest https://whatsprintis.it/sprint -Headers @{"Accept"="application/json"} | ConvertFrom-Json).sprint
+    $currentSprint = $(currentSprint)
     $releaseBranch = "users/$(username)/m" + $currentSprint + "." + $(currentDate) + "/courtesyPush"
 
     # Push branch to git

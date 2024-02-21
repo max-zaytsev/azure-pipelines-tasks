@@ -26,11 +26,13 @@ steps:
   displayName: Download hotfix Artifact
 
 # returns currentSprint
-- template: set-current-sprint-variable.yml
+- powershell: set-sprint-variables.ps1
+  displayName: Set currentSprint variables
 
 # returns branchName
 - template: generate-branch-name.yml
   parameters:
+    prefix: "users/$(username)"
     postfix: hotfix
     currentSprint: '$(currentSprint)'
 

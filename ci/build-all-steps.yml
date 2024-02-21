@@ -41,13 +41,13 @@ steps:
 # - script: node ./ci/verifyMinAgentDemands/index.js
 #   displayName: Verify min agent demands
 
-# set $(currentSprint) and $(currentSprintWeek) variables
-- template: set-current-sprint-variable.yml
+- powershell: set-sprint-variables.ps1
+  displayName: Set currentSprint variables
 
 - powershell: |
-    $cs = $(currentSprint)
+    $currentSprint = $(currentSprint)
     $cw = $(currentSprintWeek)
-    $cs.GetType().FullName
+    $currentSprint.GetType().FullName
     $cw.GetType().FullName
   displayName: Check for VARS
 
