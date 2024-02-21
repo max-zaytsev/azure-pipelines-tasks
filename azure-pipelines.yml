@@ -14,6 +14,10 @@ resources:
     endpoint: AzureDevOps
     name: AzureDevOps/AzureDevOps.ConfigChange
 
+variables:
+  currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
+  taskNameDefaultValue: "TaskNameVN"
+
 parameters:
 - name: build_single_task
   displayName: Build Single Task
@@ -35,10 +39,6 @@ parameters:
   displayName: Build all tasks for deployment
   type: boolean
   default: false
-
-variables:
-  currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
-  taskNameDefaultValue: "TaskNameVN"
 
 jobs:
 
