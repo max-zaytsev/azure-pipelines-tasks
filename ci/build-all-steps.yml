@@ -46,7 +46,7 @@ steps:
 
 - powershell: |
     $cs = $(currentSprint)
-    $cw = (currentSprintWeek)
+    $cw = $(currentSprintWeek)
     $cs.GetType().FullName
     $cw.GetType().FullName
   displayName: Check for VARS
