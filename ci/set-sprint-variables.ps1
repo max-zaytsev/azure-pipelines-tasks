@@ -1,7 +1,7 @@
 # Determine current sprint.
 $currentSprint = (Invoke-WebRequest https://whatsprintis.it -Headers @{"Accept" = "application/json" } | ConvertFrom-Json)
 
-$sprint = $currentSprint.sprint
+$sprint = ''
 $week = $currentSprint.week
 
 if ($sprint -notmatch '^\d{3}$') {
