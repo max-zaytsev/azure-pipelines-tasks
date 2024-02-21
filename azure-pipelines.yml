@@ -1,7 +1,6 @@
 trigger:
 - master
 - releases/*
-- node6hotfixes/*
 
 resources:
   repositories:
@@ -21,9 +20,8 @@ parameters:
   type: boolean
   default: false
 - name: task_name
-  displayName: Task Name
+  displayName: Tasks to build (e.g. BashV3 [, AzureCLIV1])
   type: string
-  default: TaskNameVN
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
@@ -63,6 +61,8 @@ jobs:
     - template: ci/build-all-steps.yml
       parameters:
         os: Windows_NT
+        task_list:  ${{ parameters.task_name }}
+        push_to_feed: ${{ parameters.push_to_feed }}
 
   # Publish
   - job: publish
