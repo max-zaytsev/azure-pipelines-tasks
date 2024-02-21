@@ -34,7 +34,7 @@ steps:
   displayName: Update unified deps
 
 # returns currentSprint
-- powershell: set-sprint-variables.ps1
+- powershell: .\set-sprint-variables.ps1
   displayName: Set currentSprint variables
 
 # returns branchName
