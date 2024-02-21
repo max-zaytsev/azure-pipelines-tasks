@@ -1,7 +1,6 @@
 parameters:
   os: ''
-  task_list: ''
-  push_to_feed: false
+  task_name: ''
 
 steps:
 
@@ -53,15 +52,14 @@ steps:
   displayName: Check for VARS
 
 
-# # Filter out unchanged tasks
-# - script: node ./ci/filter-tasks.js
-#   displayName: Filter out unchanged tasks
-#   name: getTaskPattern
-#   env:
-#     PACKAGE_ENDPOINT: $(Package.Endpoint)
-#     PACKAGE_TOKEN: $(Package.Token)
-#     TASK_LIST: ${{ parameters.task_list }}
-#     PUSH_TO_FEED: ${{ parameters.push_to_feed }}
+# Filter out unchanged tasks
+- script: node ./ci/filter-tasks.js
+  displayName: Filter out unchanged tasks
+  name: getTaskPattern
+  env:
+    PACKAGE_ENDPOINT: $(Package.Endpoint)
+    PACKAGE_TOKEN: $(Package.Token)
+    TASK_NAME: ${{ parameters.task_name }}
 
 # - script: node ./ci/before-build-check-tasks.js
 #   displayName: Check that tasks has no duplicated libs

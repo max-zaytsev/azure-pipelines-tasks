@@ -22,7 +22,7 @@ parameters:
 - name: task_name
   displayName: Tasks to build (e.g. BashV3 [, AzureCLIV1])
   type: string
-  default: ''
+  default: TaskNameVN
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
@@ -62,8 +62,7 @@ jobs:
     - template: ci/build-all-steps.yml
       parameters:
         os: Windows_NT
-        task_list:  ${{ parameters.task_name }}
-        push_to_feed: ${{ parameters.push_to_feed }}
+        task_name:  ${{ parameters.task_name }}
 
   # Publish
   - job: publish
