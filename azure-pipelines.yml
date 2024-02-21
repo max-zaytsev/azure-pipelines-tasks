@@ -111,7 +111,8 @@ jobs:
     variables:
       task_pattern: $[dependencies.build_all_windows.outputs['getTaskPattern.task_pattern']]
     pool:
-      name: 1ES-Shared-Hosted-Pool_Windows-Server-2022
+      name: windows-latest
+      #name: 1ES-Shared-Hosted-Pool_Windows-Server-2022
     steps:
     - template: ci/build-all-tasks.yml
       parameters:
