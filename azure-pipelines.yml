@@ -49,11 +49,14 @@ jobs:
   # - powershell: .\ci\set-sprint-variables.ps1
   #   displayName: Set sprint variables
 
-  - template: .\ci\generate-branch-name.yml
-    parameters:
-      ${{ if eq(variables['isHotfix'], 'True') }}:
+  - ${{ if eq(variables.isHotfix, 'True') }}:
+    - template: .\ci\generate-branch-name.yml
+      parameters:
         postfix: "-hotfix-$(build.buildId)"
-      ${{ else }}:
+
+  - ${{ else }}: # true
+    - template: .\ci\generate-branch-name.yml
+      parameters:
         postfix: "courtesypush"
 
   - powershell: |
