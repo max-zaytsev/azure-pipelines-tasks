@@ -62,6 +62,7 @@ jobs:
       Write-Host "currentDate = $(currentDate)"
       Write-Host "taskNameIsSet = $(taskNameIsSet)"
       Write-Host isHotfix = $(isHotfix)
+      $isHotfix = $(isHotfix)
       Write-Host $(branchName)
       Write-Host $isHotfix.GetType().FullName
       Write-Host $isHotfix -eq $true
