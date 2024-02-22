@@ -1,9 +1,10 @@
 parameters:
 - name: prefix
   type: string
-  default: "releases"
+  default: "users/$(username)"
 - name: postfix
   type: string
+  default: ""
 - name: currentSprint
   type: string
   default: "1"

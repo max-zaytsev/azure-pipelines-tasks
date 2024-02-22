@@ -46,9 +46,13 @@ jobs:
   pool:
     vmImage: 'windows-latest'
   steps:
+  - powershell: .\ci\set-sprint-variables.ps1
+    displayName: Set sprint variables
+
   - template: .\ci\generate-branch-name.yml
     parameters:
-      prefix: "users/$(username)"
+      prefix: "releases"
+      sprint: $(currentSprint)
       ${{ if eq(variables.isHotfix, true) }}:
         postfix: "-hotfix-$(build.buildId)"
 
