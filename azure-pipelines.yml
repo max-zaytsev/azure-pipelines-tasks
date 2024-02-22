@@ -62,10 +62,10 @@ jobs:
       Write-Host "currentDate = $(currentDate)"
       Write-Host "taskNameIsSet = $(taskNameIsSet)"
       Write-Host "isHotfix = $(isHotfix)"
-      $isHotfix = $(isHotfix)
+      $isHotfixB = $(isHotfix)
       Write-Host $(branchName)
-      Write-Host $isHotfix.GetType().FullName
-      Write-Host $isHotfix -eq $true
+      Write-Host $isHotfixB.GetType().FullName
+      Write-Host $isHotfixB -eq $true
 
 # - ${{ if parameters.build_single_task }}:
 
