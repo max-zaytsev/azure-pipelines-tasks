@@ -6,6 +6,7 @@ parameters:
   type: string
 - name: currentSprint
   type: string
+  default: "1"
 
 steps:
 - powershell: |

@@ -46,11 +46,18 @@ jobs:
   pool:
     vmImage: 'windows-latest'
   steps:
+  - template: .\ci\generate-branch-name.yml
+    parameters:
+      prefix: "users/$(username)"
+      ${{ if variables.isHotfix }}:
+        postfix: "-hotfix-$(build.buildId)"
+
   - powershell: |
       Write-Host "Hello, world!"
       Write-Host "currentDate = $(currentDate)"
       Write-Host "taskNameIsSet = $(taskNameIsSet)"
       Write-Host isHotfix = $(isHotfix)
+      Write-Host $(branchName)
 
 # - ${{ if parameters.build_single_task }}:
 
