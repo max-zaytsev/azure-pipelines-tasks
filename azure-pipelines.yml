@@ -60,7 +60,7 @@ jobs:
       Write-Host "Hello, world!"
       Write-Host "currentDate = $(currentDate)"
       Write-Host "taskNameIsSet = $(taskNameIsSet)"
-      $isHotfixB = $(isHotfix)
+      $isHotfixB = "$(isHotfix)"
       Write-Host $(branchName)
       Write-Host $isHotfixB
       Write-Host $isHotfixB -eq $true
