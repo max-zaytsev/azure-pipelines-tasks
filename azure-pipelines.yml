@@ -61,7 +61,7 @@ jobs:
       Write-Host "Hello, world!"
       Write-Host "currentDate = $(currentDate)"
       Write-Host "taskNameIsSet = $(taskNameIsSet)"
-      Write-Host isHotfix = $(isHotfix)
+      Write-Host "isHotfix = $(isHotfix)"
       $isHotfix = $(isHotfix)
       Write-Host $(branchName)
       Write-Host $isHotfix.GetType().FullName
