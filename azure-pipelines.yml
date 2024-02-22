@@ -39,9 +39,9 @@ parameters:
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
   FORCE_COURTESY_PUSH_1: $[ eq(variables['FORCE_COURTESY_PUSH'], true) ] 
-  FORCE_COURTESY_PUSH_2: ${{ eq(variables.FORCE_COURTESY_PUSH, true) }}
   task_name_1: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
-  isHotfix: ${{ and(not(eq(parameters.task_name, 'TaskNameVN')), eq(variables.FORCE_COURTESY_PUSH, true)) }}
+  isHotfix: $[ and(not(eq(parameters['task_name'], 'TaskNameVN')), eq(variables['FORCE_COURTESY_PUSH'], true)) ]
+  isHotfix2: $[ and(variables['FORCE_COURTESY_PUSH_1'], variables['task_name_1'])]
 
 jobs:
 - job: job1
@@ -52,9 +52,9 @@ jobs:
       Write-Host "Hello, world!"
       Write-Host "currentDate = $(currentDate)"
       Write-Host "FORCE_COURTESY_PUSH_1 = $(FORCE_COURTESY_PUSH_1)"
-      Write-Host "FORCE_COURTESY_PUSH_2 = $(FORCE_COURTESY_PUSH_2)"
       Write-Host task_name_1 = $(task_name_1)
       Write-Host "isHotfix = $(isHotfix)"
+      Write-Host "isHotfix2 = $(isHotfix2)"
 
 # - ${{ if parameters.build_single_task }}:
 
