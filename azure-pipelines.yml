@@ -38,6 +38,8 @@ parameters:
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
+  FORCE_COURTESY_PUSH_1: ${{ variables.FORCE_COURTESY_PUSH }} # compile time expression
+  task_name_1: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   isHotfix: ${{ and(not(eq(parameters.task_name, 'TaskNameVN')), eq(variables.FORCE_COURTESY_PUSH, true)) }}
 
 jobs:
@@ -47,6 +49,9 @@ jobs:
   steps:
   - powershell: |
       Write-Host "Hello, world!"
+      Write-Host "currentDate = $(currentDate)"
+      Write-Host "FORCE_COURTESY_PUSH_1 = $(FORCE_COURTESY_PUSH_1)"
+      Write-Host task_name_1 = $(task_name_1)
       Write-Host "isHotfix = $(isHotfix)"
 
 # - ${{ if parameters.build_single_task }}:
