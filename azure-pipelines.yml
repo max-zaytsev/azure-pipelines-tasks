@@ -46,13 +46,12 @@ jobs:
   pool:
     vmImage: 'windows-latest'
   steps:
-  - powershell: .\ci\set-sprint-variables.ps1
-    displayName: Set sprint variables
+  # - powershell: .\ci\set-sprint-variables.ps1
+  #   displayName: Set sprint variables
 
   - template: .\ci\generate-branch-name.yml
     parameters:
-      currentSprint: $(currentSprint)
-      ${{ if eq(variables['isHotfix'], 'True') }}:
+      ${{ if eq(variables['isHotfix'], true) }}:
         postfix: "-hotfix-$(build.buildId)"
       ${{ else }}:
         postfix: "courtesypush"
@@ -64,7 +63,7 @@ jobs:
       Write-Host "isHotfix = $(isHotfix)"
       $isHotfixB = $(isHotfix)
       Write-Host $(branchName)
-      Write-Host $isHotfixB.GetType().FullName
+      Write-Host $isHotfixB
       Write-Host $isHotfixB -eq $true
 
 # - ${{ if parameters.build_single_task }}:
