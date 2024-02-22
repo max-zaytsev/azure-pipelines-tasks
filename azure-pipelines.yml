@@ -49,7 +49,7 @@ jobs:
   - template: .\ci\generate-branch-name.yml
     parameters:
       prefix: "users/$(username)"
-      ${{ if variables.isHotfix }}:
+      ${{ if eq(variables.isHotfix, true) }}:
         postfix: "-hotfix-$(build.buildId)"
 
   - powershell: |
