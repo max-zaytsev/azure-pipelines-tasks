@@ -48,7 +48,7 @@ jobs:
   - powershell: |
       Write-Host "Hello, world!"
       Write-Host "isHotfix = $(isHotfix)"
-  condition: and(succeeded(), eq(variables['isHotfix'], 'true'))
+  condition: and(succeeded(), eq(variables.isHotfix, true))
 
 
 # - ${{ if parameters.build_single_task }}:
