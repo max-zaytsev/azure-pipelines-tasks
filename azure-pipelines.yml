@@ -52,7 +52,7 @@ jobs:
   - template: .\ci\generate-branch-name.yml
     parameters:
       currentSprint: $(currentSprint)
-      ${{ if eq(variables.isHotfix, 'True') }}:
+      ${{ if eq(variables['isHotfix'], 'True') }}:
         postfix: "-hotfix-$(build.buildId)"
       ${{ else }}:
         postfix: "courtesypush"
