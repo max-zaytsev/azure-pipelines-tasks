@@ -38,7 +38,7 @@ parameters:
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
-  isHotfix: $[ and(not(eq(parameters.task_name, 'TaskNameVN')), eq(variables['FORCE_COURTESY_PUSH'], 'true'))]
+  isHotfix: ${{ and(not(eq(parameters.task_name, 'TaskNameVN')), eq(variables['FORCE_COURTESY_PUSH'], 'true')) }}
 
 jobs:
 - job: job1
