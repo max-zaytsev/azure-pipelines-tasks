@@ -38,7 +38,7 @@ parameters:
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
-  FORCE_COURTESY_PUSH_1: $[ eq(variables['FORCE_COURTESY_PUSH', true) ] 
+  FORCE_COURTESY_PUSH_1: $[ eq(variables['FORCE_COURTESY_PUSH'], true) ] 
   FORCE_COURTESY_PUSH_2: ${{ eq(variables.FORCE_COURTESY_PUSH, true) }}
   task_name_1: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   isHotfix: ${{ and(not(eq(parameters.task_name, 'TaskNameVN')), eq(variables.FORCE_COURTESY_PUSH, true)) }}
