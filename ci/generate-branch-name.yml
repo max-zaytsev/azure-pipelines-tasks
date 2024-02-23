@@ -13,13 +13,15 @@ steps:
 - powershell: |
     Write-Host "isHotfix: $(isHotfix)"
     $isH = $(isHotfix)
-    if ($isH -eq $true) {
+    if ("$isH" -eq $true) {
       Write-Host "Hotfix"
       Write-Host "$isH"
       $hfPostfix = "-hotfix"
     } else {
       Write-Host "Not hotfix"
       $hfPostfix = ""
+      Write-Host "Hotfix"
+      Write-Host "$isH"
     }
     Write-Host "Current sprint $(currentSprint)"
     $branchName = "${{ parameters.prefix }}/m$(currentSprint).$(currentDate)/${{ parameters.postfix }}${hfPostfix}"
