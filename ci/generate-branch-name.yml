@@ -13,8 +13,14 @@ steps:
 - powershell: |
     Write-Host "isHotfix: $(isHotfix)"
     $isH = $(isHotfix)
+    if ($isH) {
+      Write-Host "Hotfix"
+      $hfPostfix = "-hotfix"
+    } else {
+      Write-Host "Not hotfix"
+      $hfPostfix = ""
+    }
     Write-Host "Current sprint $(currentSprint)"
-    $hfPostfix = if($isH) { "-hotfix" } else { "" }
     $branchName = "${{ parameters.prefix }}/m$(currentSprint).$(currentDate)/${{ parameters.postfix }}${hfPostfix}"
     Write-Host $branchName
     Write-Host "##vso[task.setVariable variable=branchName]$branchName"
