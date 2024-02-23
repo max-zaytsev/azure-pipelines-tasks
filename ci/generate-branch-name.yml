@@ -13,7 +13,7 @@ steps:
 - powershell: |
     Write-Host "isHotfix: $(isHotfix)"
     $isH ="$(isHotfix)"
-    if ("$isH" -eq $true) {
+    if ("$(isHotfix)") {
       Write-Host "Hotfix"
       Write-Host "$isH"
       $hfPostfix = "-hotfix"
