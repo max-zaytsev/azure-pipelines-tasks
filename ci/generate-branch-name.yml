@@ -1,17 +1,18 @@
 parameters:
-- name: prefix
-  type: string
-  default: "users/$(username)"
 - name: postfix
   type: string
   default: ""
+- name: prefix
+  type: string
+  default: "users/$(username)"
 - name: currentSprint
   type: string
-  default: "1"
+  default: "0"
 
 steps:
 - powershell: |
-    $branchName = "${{ parameters.prefix }}/m${{ parameters.currentSprint }}.$(currentDate)${{ parameters.postfix }}"
+    $hfPostfix = if($(isHotfix)) { "-hotfix" } else { "" }
+    $branchName = "${{ parameters.prefix }}/m${{ parameters.currentSprint }}.$(currentDate)/${{ parameters.postfix }}{$hfPostfix}"
     Write-Host $branchName
     Write-Host "##vso[task.setVariable variable=branchName]$branchName"
   displayName: Generate branch name
