@@ -22,6 +22,7 @@ steps:
       $hfPostfix = ""
       Write-Host "Hotfix"
       Write-Host "$isH"
+      Write-Host "isHotfix: $(isHotfix)"
     }
     Write-Host "Current sprint $(currentSprint)"
     $branchName = "${{ parameters.prefix }}/m$(currentSprint).$(currentDate)/${{ parameters.postfix }}${hfPostfix}"
