@@ -12,7 +12,7 @@ parameters:
 steps:
 - powershell: |
     Write-Host "isHotfix: $(isHotfix)"
-    $isH = $(isHotfix)
+    $isH ="$(isHotfix)"
     if ("$isH" -eq $true) {
       Write-Host "Hotfix"
       Write-Host "$isH"
