@@ -1,6 +1,7 @@
 trigger:
 - master
 - releases/*
+- users/max-zaytsev/check-courtesy-push
 
 # resources:
 #   repositories:
