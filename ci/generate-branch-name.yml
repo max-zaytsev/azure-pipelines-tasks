@@ -1,31 +1,12 @@
 parameters:
-- name: postfix
-  type: string
-  default: ""
 - name: prefix
   type: string
   default: "users/$(username)"
-- name: currentSprint
-  type: string
-  default: "0"
-
 steps:
 - powershell: |
-    Write-Host "isHotfix: $(isHotfix)"
-    $isH ="$(isHotfix)"
-    if ("$(isHotfix)") {
-      Write-Host "Hotfix"
-      Write-Host "$isH"
-      $hfPostfix = "-hotfix"
-    } else {
-      Write-Host "Not hotfix"
-      $hfPostfix = ""
-      Write-Host "Hotfix"
-      Write-Host "$isH"
-      Write-Host "isHotfix: $(isHotfix)"
-    }
-    Write-Host "Current sprint $(currentSprint)"
-    $branchName = "${{ parameters.prefix }}/m$(currentSprint).$(currentDate)/${{ parameters.postfix }}${hfPostfix}"
+    $postfix =  "$(isHotfix)" ? "hotfix" : "courtesy-push" 
+    Write-Host "Current sprint $postfix"
+    $branchName = "${{ parameters.prefix }}/m$(currentSprint).$(currentDate)/$postfix"
     Write-Host $branchName
     Write-Host "##vso[task.setVariable variable=branchName]$branchName"
   displayName: Generate branch name

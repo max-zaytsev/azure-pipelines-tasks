@@ -56,8 +56,6 @@ jobs:
     displayName: Set sprint variables
 
   - template: .\ci\generate-branch-name.yml
-    parameters:
-      currentSprint: $(currentSprint)
 
   - powershell: |
       Write-Host "Hello, world!"
