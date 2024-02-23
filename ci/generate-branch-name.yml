@@ -11,7 +11,9 @@ parameters:
 
 steps:
 - powershell: |
-    $hfPostfix = if($(isHotfix)) { "-hotfix" } else { "" }
+    Write-Host "isHotfix: $(isHotfix)"
+    $isH = $(isHotfix)
+    $hfPostfix = if($isH) { "-hotfix" } else { "" }
     $branchName = "${{ parameters.prefix }}/m${{ parameters.currentSprint }}.$(currentDate)/${{ parameters.postfix }}${hfPostfix}"
     Write-Host $branchName
     Write-Host "##vso[task.setVariable variable=branchName]$branchName"
