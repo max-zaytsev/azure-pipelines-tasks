@@ -13,8 +13,9 @@ steps:
 - powershell: |
     Write-Host "isHotfix: $(isHotfix)"
     $isH = $(isHotfix)
-    if ($isH) {
+    if ($isH -eq $true) {
       Write-Host "Hotfix"
+      Write-Host "$isH"
       $hfPostfix = "-hotfix"
     } else {
       Write-Host "Not hotfix"
