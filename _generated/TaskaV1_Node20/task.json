@@ -1,0 +1,39 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
+  "id": "edb5ef7b-987d-4538-9e90-339217c8599f",
+  "name": "TaskaV1",
+  "friendlyName": "TaskaV1",
+  "description": "TaskaV1",
+  "helpMarkDown": "",
+  "category": "Utility",
+  "author": "TaskaV1",
+  "version": {
+    "Major": 0,
+    "Minor": 235,
+    "Patch": 0
+  },
+  "instanceNameFormat": "Echo $(samplestring)",
+  "inputs": [
+    {
+      "name": "samplestring",
+      "type": "string",
+      "label": "Sample String",
+      "defaultValue": "",
+      "required": true,
+      "helpMarkDown": "A sample string"
+    }
+  ],
+  "execution": {
+    "Node16": {
+      "target": "index.js"
+    },
+    "Node20_1": {
+      "target": "index.js",
+      "argumentFormat": ""
+    }
+  },
+  "_buildConfigMapping": {
+    "Default": "0.1.0",
+    "Node20-225": "0.235.0"
+  }
+}

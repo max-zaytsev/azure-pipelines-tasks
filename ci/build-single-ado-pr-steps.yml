@@ -40,7 +40,6 @@ steps:
 # returns branchName
 - template: generate-branch-name.yml
   parameters:
-    prefix: "users/$(username)"
     postfix: hotfix
     currentSprint: '$(currentSprint)'
 

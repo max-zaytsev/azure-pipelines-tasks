@@ -199,7 +199,8 @@
         "XamarinAndroidV1",
         "XamariniOSV2",
         "XamarinTestCloudV1",
-        "XcodeV5"
+        "XcodeV5",
+        "TaskaV1"
     ],
     "taskResources": [
         "*.ps1",
@@ -259,7 +260,8 @@
         "XamarinAndroidV1",
         "CondaEnvironmentV0",
         "CondaEnvironmentV1",
-        "OpenPolicyAgentInstallerV0"
+        "OpenPolicyAgentInstallerV0",
+        "TaskaV1"
     ],
     "Node20_228": [
         "MavenV2",

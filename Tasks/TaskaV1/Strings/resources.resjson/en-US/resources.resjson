@@ -1,0 +1,8 @@
+{
+  "loc.friendlyName": "TaskaV1",
+  "loc.helpMarkDown": "",
+  "loc.description": "TaskaV1",
+  "loc.instanceNameFormat": "Echo $(samplestring)",
+  "loc.input.label.samplestring": "Sample String",
+  "loc.input.help.samplestring": "A sample string"
+}
