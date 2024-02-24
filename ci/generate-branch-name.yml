@@ -4,7 +4,7 @@ parameters:
   default: "users/$(username)"
 steps:
 - powershell: |
-    $postfix =  if("$(isHotfix)") { "hotfix" } else {"courtesy-push" }
+    $postfix =  if("$(isHotfix)" -eq $true) { "hotfix" } else { "courtesy-push" }
     Write-Host "Current sprint $postfix"
     $branchName = "${{ parameters.prefix }}/m$(currentSprint).$(currentDate)/$postfix"
     Write-Host $branchName
