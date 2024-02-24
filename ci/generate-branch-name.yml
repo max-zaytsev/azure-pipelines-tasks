@@ -13,3 +13,4 @@ steps:
 
   #$branchName = "users/$(username)/m${{ parameters.currentSprint }}-${currentDate}/${{ parameters.postfix }}"
   #$releaseBranch = "releases/m" + $(currentSprint) + "." + $(currentDate)
+  #
