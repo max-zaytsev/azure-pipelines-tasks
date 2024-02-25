@@ -47,6 +47,7 @@ variables:
   #                 eq(variables['pushToFeedIsSet'], true)
   #                 )]
 
+jobs:
 # - ${{ if parameters.build_single_task }}:
 
 #   - template: ci/build-single-jobs.yml
