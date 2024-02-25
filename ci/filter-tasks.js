@@ -226,6 +226,8 @@ var defaultTaskNameValue = "TaskNameVN";
 var taskNameParameter = process.env['TASK_NAME'];
 var tasksFromParameter = taskNameParameter === defaultTaskNameValue ? [] : taskNameParameter.split(",").map(item => item.trim());
 
+console.log(process.env)
+
 const AzpBuildReason = {
     Individualci: "individualci",
     Batchedci: "batchedci",

@@ -1,7 +1,7 @@
 trigger:
 - master
 - releases/*
-- users/max-zaytsev/check-courtesy-push
+#- users/max-zaytsev/check-courtesy-push
 
 # resources:
 #   repositories:
@@ -47,27 +47,6 @@ variables:
   #                 eq(variables['pushToFeedIsSet'], true)
   #                 )]
 
-jobs:
-- job: job1
-  pool:
-    vmImage: 'windows-latest'
-  steps:
-  - powershell: .\ci\set-sprint-variables.ps1
-    displayName: Set sprint variables
-
-  - template: .\ci\generate-branch-name.yml
-    parameters:
-      prefix: releases
-
-  - powershell: |
-      Write-Host "Hello, world!"
-      Write-Host "currentDate = $(currentDate)"
-      Write-Host "taskNameIsSet = $(taskNameIsSet)"
-      $isHotfixB = "$(isHotfix)"
-      Write-Host $(branchName)
-      Write-Host $isHotfixB
-      Write-Host $isHotfixB -eq $true
-
 # - ${{ if parameters.build_single_task }}:
 
 #   - template: ci/build-single-jobs.yml
@@ -76,31 +55,33 @@ jobs:
 #       push_to_feed: ${{ parameters.push_to_feed }}
 #       generate_prs: ${{ parameters.generate_prs }}
 
-# - ${{ if not(parameters.build_single_task) }}:
+- ${{ if not(parameters.build_single_task) }}:
 
-#   # All tasks on Windows
-#   - job: build_all_windows
-#     displayName: Build all tasks (Windows)
-#     condition: eq(variables.os, 'Windows_NT')
-#     timeoutInMinutes: 180
-#     pool:
-#       vmImage: windows-2022
-#     steps:
-#     - template: ci/build-all-steps.yml
-#       parameters:
-#         os: Windows_NT
-#         task_name:  ${{ parameters.task_name }}
+  # All tasks on Windows
+  - job: build_all_windows
+    displayName: Build all tasks (Windows)
+    condition: eq(variables.os, 'Windows_NT')
+    timeoutInMinutes: 180
+    pool:
+      mame: Windows1
+      #vmImage: windows-2022
+    steps:
+    - template: ci/build-all-steps.yml
+      parameters:
+        os: Windows_NT
+        task_name:  ${{ parameters.task_name }}
 
-#   # Publish
-#   - job: publish
-#     displayName: Publish
-#     dependsOn:
-#     - build_all_windows
-#     condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
-#     pool:
-#       vmImage: windows-2022
-#     steps:
-#     - template: ci/publish-steps.yml
+  # Publish
+  - job: publish
+    displayName: Publish
+    dependsOn:
+    - build_all_windows
+    condition: and(succeeded(), ne(variables['build.reason'], 'PullRequest'))
+    pool:
+      name: Windows1
+      vmImage: windows-2022
+    steps:
+    - template: ci/publish-steps.yml
 
 #   # Courtesy Push
 #   - job: courtesy_push
