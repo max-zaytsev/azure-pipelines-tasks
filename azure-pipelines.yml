@@ -41,7 +41,7 @@ variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
   taskName: ${{ parameters.task_name }}
   taskNameDefaultValue: 'TaskNameVN'
-  taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
+  taskNameIsSet: ${{ not(eq(variables.taskName, variables.taskNameDefaultValue)) }}
   isHotfix: ${{ and(parameters.push_to_feed, variables.taskNameIsSet) }}
   
   # isHotfix: $[ or(
