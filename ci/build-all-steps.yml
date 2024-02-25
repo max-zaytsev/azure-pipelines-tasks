@@ -42,15 +42,6 @@ steps:
 
 
 # - powershell: |
-#     Write-Host "Hello, world!"
-#     Write-Host "currentDate = $(currentDate)"
-#     Write-Host "taskNameIsSet = $(taskNameIsSet)"
-#     $isHotfixB = "$(isHotfix)"
-#     Write-Host $(branchName)
-#     Write-Host $isHotfixB
-#     Write-Host $isHotfixB -eq $true
-
-# - powershell: |
 #     $currentSprint = $(currentSprint)
 #     $cw = $(currentSprintWeek)
 #     $currentSprint.GetType().FullName

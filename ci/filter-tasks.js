@@ -222,11 +222,15 @@ var setTaskVariables = function(tasks, tasksForDowngradingCheck) {
 var buildReason = process.env['BUILD_REASON'].toLowerCase();
 var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'] && process.env['FORCE_COURTESY_PUSH'].toLowerCase() === 'true';
 
-var defaultTaskNameValue = "TaskNameVN";
-var taskNameParameter = process.env['TASK_NAME'];
-var tasksFromParameter = taskNameParameter === defaultTaskNameValue ? [] : taskNameParameter.split(",").map(item => item.trim());
+var taskNameIsSet = null;// process.env['TASKNAMEISSET'] && process.env['TASKNAMEISSET'].toLowerCase() === 'true';
+if (taskNameIsSet) {
+    var taskName = process.env['TASKNAME'];
+    var tasksFromParameter = taskName.split(",").map(item => item.trim());
+}
+// var defaultTaskNameValue = "TaskNameVN";
+// var taskNameParameter = process.env['TASKLIST'];
 
-console.log(process.env)
+//console.log(process.env)
 
 const AzpBuildReason = {
     Individualci: "individualci",
@@ -244,7 +248,7 @@ const ciBuildReasonList = [
 
 async function filterTasks () {
     try {
-        if (ciBuildReasonList.includes(buildReason) || forceCourtesyPush && tasksFromParameter.length === 0) {
+        if (ciBuildReasonList.includes(buildReason) || forceCourtesyPush && !taskNameIsSet) {
             // If CI, we will compare any tasks that have updated versions.
             console.log("DONE");
             //const tasks = await getTasksToBuildForCI();
@@ -266,10 +270,11 @@ async function filterTasks () {
                 const tasks = await getTasksToBuildForPR(prId, false);
                 const tasksForDowngradingCheck = await getTasksToBuildForPR(prId, true);
                 setTaskVariables(tasks, tasksForDowngradingCheck);
-            } else if (buildReason == AzpBuildReason.Manual && tasksFromParameter.length > 0 ) {
+            } else if (buildReason == AzpBuildReason.Manual && taskNameIsSet) {
                 const unknownTasks = tasksFromParameter.filter(task => !makeOptions.tasks.includes(task))
                 if (unknownTasks.length > 0) {
-                    throw new Error(`Can't find ${unknownTasks} tasks in the make-options.json`);
+                    throw new Error("Can't find" + unknownTasks + "tasks in the make-options.json file.\n" +
+                                   "Please ensure that 'Tasks to build' parameter is specified correctly (e.g. BashV3, AzureCLIV1...).");
                 } 
                 setTaskVariables(tasksFromParameter, tasksFromParameter);
             } else {

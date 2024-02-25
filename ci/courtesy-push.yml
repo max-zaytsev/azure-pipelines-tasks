@@ -35,13 +35,6 @@ steps:
   displayName: Set sprint variables
 
 - template: .\ci\generate-branch-name.yml
-  parameters:
-    prefix: "releases"
-    currentSprint: $(currentSprint)
-    ${{ if eq(variables.isHotfix, true) }}:
-      postfix: "-hotfix-$(build.buildId)"
-    ${{ else }}:
-      postfix: "courtesyPush"
 
 - powershell: |
     # Build the release branch name
