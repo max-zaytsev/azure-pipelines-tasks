@@ -64,7 +64,7 @@ jobs:
     condition: eq(variables.os, 'Windows_NT')
     timeoutInMinutes: 180
     pool:
-      mame: Windows1
+      name: Windows1
       #vmImage: windows-2022
     steps:
     - template: ci/build-all-steps.yml
