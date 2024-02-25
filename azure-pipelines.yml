@@ -52,7 +52,7 @@ jobs:
 - job: MY
   displayName: MY
   pool:
-    vmImage: Windows1
+    name: Windows1
   steps:
   - template: .\ci\generate-branch-name.yml
   - powershell: |
