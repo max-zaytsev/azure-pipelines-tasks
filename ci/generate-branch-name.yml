@@ -3,10 +3,15 @@ parameters:
   type: string
   default: "users/$(username)"
 steps:
-- powershell: |
-    $postfix =  if("$(isHotfix)" -eq $true) { "hotfix-buildId-$(Build.BuildId)" } else { "courtesy-push" }
-    Write-Host "Current sprint $postfix"
-    $branchName = "${{ parameters.prefix }}/m$(currentSprint).$(currentDate)/$postfix"
-    Write-Host $branchName
-    Write-Host "##vso[task.setVariable variable=branchName]$branchName"
+- task: PowerShell@2
+  inputs:
+    pwsh: true
+    targetType: inline
+    script: |
+      $postfixV2 = "$(isHotfix)" ? "hotfix-buildId-$(Build.BuildId)" : "courtesy-push"
+      $postfix =  if("$(isHotfix)" -eq $true) { "hotfix-buildId-$(Build.BuildId)" } else { "courtesy-push" }
+      Write-Host "Current sprint $postfix or $postfixV2"
+      $branchName = "${{ parameters.prefix }}/m$(currentSprint).$(currentDate)/$postfix"
+      Write-Host $branchName
+      Write-Host "##vso[task.setVariable variable=branchName]$branchName"
   displayName: Generate branch name

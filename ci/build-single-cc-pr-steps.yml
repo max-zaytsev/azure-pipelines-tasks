@@ -31,9 +31,6 @@ steps:
 
 # returns branchName
 - template: generate-branch-name.yml
-  parameters:
-    postfix: hotfix
-    currentSprint: '$(currentSprint)'
 
 - powershell: |
     $currentDate = Get-Date -Format "yyyyMMdd-HHmm"
