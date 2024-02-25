@@ -23,7 +23,7 @@ parameters:
 - name: task_name
   displayName: Tasks to build (e.g. BashV3 [, AzureCLIV1])
   type: string
-  default: BashV3
+  default: TaskNameVN
 - name: push_to_feed
   displayName: Push to Feed
   type: boolean
@@ -39,9 +39,10 @@ parameters:
 
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
-  taskList: ${{ parameters.task_name }}
+  taskName: ${{ parameters.task_name }}
   taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   isHotfix: ${{ and(eq(parameters.push_to_feed, true), eq(variables.taskNameIsSet, true)) }}
+  isHotfix2: ${{ and(parameters.push_to_feed, variables.taskNameIsSet) }}
   
   # isHotfix: $[ or(
   #                 and(eq(variables['FORCE_COURTESY_PUSH'], true), eq(variables['taskNameIsSet'], true)),
@@ -59,6 +60,9 @@ jobs:
 
   - template: .\ci\generate-branch-name.yml
   - powershell: |
+      echo "isHotfix2 = $(isHotfix2)"
+      echo "isHotfix = $(isHotfix)"
+      echo "---------------------------------------------"
       dir env:
     displayName: Show env
 # - ${{ if parameters.build_single_task }}:
@@ -83,7 +87,6 @@ jobs:
 #     - template: ci/build-all-steps.yml
 #       parameters:
 #         os: Windows_NT
-#         task_name:  ${{ parameters.task_name }}
 
 #   # Publish
 #   - job: publish
