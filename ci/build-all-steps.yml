@@ -82,7 +82,7 @@ steps:
   displayName: Ensure BuildConfigGen outputs are consistent
 
 # Set $(currentSprint) and $(currentSprintWeek) variables
-- powershell: .\ci\set-sprint-variables.ps1
+- powershell: ./ci/set-sprint-variables.ps1
   displayName: Set sprint variables
 
 - script: node ./ci/check-downgrading.js --task "$(task_pattern_fordowngradingcheck)" --sprint $(currentSprint) --week $(currentSprintWeek)
@@ -204,7 +204,7 @@ steps:
   #       ne(variables['numTasks'], 0)
   #     )
 
-  - template: .\ci\generate-branch-name.yml
+  - template: generate-branch-name.yml
     parameters:
       prefix: releases
 
@@ -216,7 +216,7 @@ steps:
       # git config --global user.name "$(username)"
 
       # # Pull commits from remote and push branch to git
-      # git checkout -b $releaseBranch
+      git checkout -b $releaseBranch
       # Write-Host 'Trying to pull the remote branch..'
       # git pull https://$(GitHubPAT)@github.com/microsoft/azure-pipelines-tasks $releaseBranch
       # if (-not $?) {
