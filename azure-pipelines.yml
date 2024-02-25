@@ -54,6 +54,9 @@ jobs:
   pool:
     name: Windows1
   steps:
+  - powershell: ./ci/set-sprint-variables.ps1
+    displayName: Set sprint variables
+
   - template: .\ci\generate-branch-name.yml
   - powershell: |
       dir env:
