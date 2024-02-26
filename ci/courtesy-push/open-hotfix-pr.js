@@ -6,7 +6,7 @@ const taskName = process.env.TASK_NAME;
 const branch = process.env.BRANCH;
 
 //const orgUrl = 'https://dev.azure.com/mseng';
-const orgUrl = 'https://dev.azure.com/v-mazayty0';
+const orgUrl = 'https://dev.azure.com/v-mazayt0';
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
 
 const project = 'AzureDevOps';
