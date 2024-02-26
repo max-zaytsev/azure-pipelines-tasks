@@ -24,11 +24,11 @@ steps:
 # Everything until this point is idempotent (other than pushing tasks release branch which will get overwritten if we re-do this anyways).
 # Note: Pushing the tasks release branch has to happen in the first job in case commits are pushed between now and then.
 
-- script: |
-    cd IndividualNugetPackagesDownloaded
-    cd IndividualNugetPackages
-    push.cmd
-  displayName: Push Nuget packages
+# - script: |
+#     cd IndividualNugetPackagesDownloaded
+#     cd IndividualNugetPackages
+#     push.cmd
+#   displayName: Push Nuget packages
 
 # Set $(currentSprint) and $(currentSprintWeek) variables
 - powershell: .\ci\set-sprint-variables.ps1
@@ -41,29 +41,33 @@ steps:
     $currentSprint = $(currentSprint)
     # "users/$(username)/m" + $currentSprint + "." + $(currentDate) + "/courtesyPush"
     $releaseBranch = $(branchName)
-
-    # Push branch to git
+    Write-Host "Release branch name: $releaseBranch and  $(branchName)"
     Write-Host "Pushing branch to AzureDevOps"
     cd AzureDevOps
     git checkout -b $releaseBranch
-    git config --global user.email "$(username)@microsoft.com"
-    git config --global user.name "$(username)"
-    git add .nuget\externals\UnifiedDependencies.xml
-    git add Tfs\Service\Deploy\components\*
-    git commit -m "Courtesy bump of tasks"
-    git push origin $releaseBranch --force
-    Write-Host "Creating Pull Request"
-    cd ..\azure-pipelines-tasks\ci\courtesy-push
-    node open-courtesy-push-pull-request.js $releaseBranch
 
-    # Sleep 30 seconds to let PR be created
-    Start-Sleep -Seconds 30
+    # # Push branch to git
+    # Write-Host "Pushing branch to AzureDevOps"
+    # cd AzureDevOps
+    # git checkout -b $releaseBranch
+    # git config --global user.email "$(username)@microsoft.com"
+    # git config --global user.name "$(username)"
+    # git add .nuget\externals\UnifiedDependencies.xml
+    # git add Tfs\Service\Deploy\components\*
+    # git commit -m "Courtesy bump of tasks"
+    # git push origin $releaseBranch --force
+    # Write-Host "Creating Pull Request"
+    # cd ..\azure-pipelines-tasks\ci\courtesy-push
+    # node open-courtesy-push-pull-request.js $releaseBranch
+
+    # # Sleep 30 seconds to let PR be created
+    # Start-Sleep -Seconds 30
   displayName: Create PR in Azure DevOps
   env:
     TOKEN: $(Package.Token)
 
-- powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
-  displayName: Send MS Teams notification
-  condition: eq(variables['build.reason'], 'Schedule')
-  env:
-    TEAMS_WEBHOOK: $(MSTeamsUri)
+# - powershell: .\azure-pipelines-tasks\ci\courtesy-push\send-notification.ps1
+#   displayName: Send MS Teams notification
+#   condition: eq(variables['build.reason'], 'Schedule')
+#   env:
+#     TEAMS_WEBHOOK: $(MSTeamsUri)
