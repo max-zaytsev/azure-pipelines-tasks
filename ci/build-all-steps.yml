@@ -204,7 +204,7 @@ steps:
       prefix: releases
 
   - powershell: |
-      $releaseBranch = $(branchName)
+      $releaseBranch = "$(branchName)"
       Write-Host "Release branch: $releaseBranch AND $releaseBranch"
 
       Write-Host "Release branch name: $releaseBranch and  $(branchName)"
