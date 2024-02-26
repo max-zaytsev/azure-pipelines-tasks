@@ -129,8 +129,8 @@ steps:
 #       ne(variables['numTasks'], 0)
 #     )
 
-# Only on Windows:
-- ${{ if eq(parameters.os, 'Windows_NT') }}:
+# # Only on Windows:
+# - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
   # # Stage tasks individually into the package directory
   # - script: node ./ci/stage-package.js false individually
