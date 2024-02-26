@@ -21,7 +21,7 @@ parameters:
   type: boolean
   default: false
 - name: task_name
-  displayName: Tasks to build (e.g. BashV3 [, AzureCLIV1])
+  displayName: Task Name (List of tasks to build (e.g. BashV3 [, AzureCLIV1]))
   type: string
   default: TaskNameVN
 - name: push_to_feed
@@ -40,8 +40,7 @@ parameters:
 variables:
   currentDate: $[ format('{0:yyyy}{0:MM}{0:dd}', pipeline.startTime) ]
   taskName: ${{ parameters.task_name }}
-  taskNameDefaultValue: 'TaskNameVN'
-  taskNameIsSet: ${{ not(eq(parameters.task_name, variables.taskNameDefaultValue)) }}
+  taskNameIsSet: ${{ not(eq(parameters.task_name, 'TaskNameVN')) }}
   isHotfix: ${{ and(eq(parameters.push_to_feed, true), eq(variables.taskNameIsSet, true)) }}
 
 jobs:

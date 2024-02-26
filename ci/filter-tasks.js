@@ -222,35 +222,27 @@ var setTaskVariables = function(tasks, tasksForDowngradingCheck) {
 var buildReason = process.env['BUILD_REASON'].toLowerCase();
 var forceCourtesyPush = process.env['FORCE_COURTESY_PUSH'] && process.env['FORCE_COURTESY_PUSH'].toLowerCase() === 'true';
 
-var taskNameIsSet = null;// process.env['TASKNAMEISSET'] && process.env['TASKNAMEISSET'].toLowerCase() === 'true';
+var taskNameIsSet = process.env['TASKNAMEISSET'] && process.env['TASKNAMEISSET'].toLowerCase() === 'true';
 if (taskNameIsSet) {
     var taskName = process.env['TASKNAME'];
-    var tasksFromParameter = taskName.split(",").map(item => item.trim());
+    var tasksFromParameter = taskName.split(',').map(item => item.trim());
 }
-// var defaultTaskNameValue = "TaskNameVN";
-// var taskNameParameter = process.env['TASKLIST'];
-
-//console.log(process.env)
 
 const AzpBuildReason = {
-    Individualci: "individualci",
-    Batchedci: "batchedci",
-    Schedule: "schedule",
-    Pullrequest: "pullrequest",
-    Manual: "manual"
-}
+    Individualci: 'individualci',
+    Batchedci: 'batchedci',
+    Schedule: 'schedule',
+    Pullrequest: 'pullrequest',
+    Manual: 'manual'
+};
 
-const ciBuildReasonList = [
-    AzpBuildReason.Individualci,
-    AzpBuildReason.Batchedci,
-    AzpBuildReason.Schedule
-]
+const ciBuildReasonList = [AzpBuildReason.Individualci, AzpBuildReason.Batchedci, AzpBuildReason.Schedule];
 
 async function filterTasks () {
     try {
-        if (ciBuildReasonList.includes(buildReason) || forceCourtesyPush && !taskNameIsSet) {
+        if (ciBuildReasonList.includes(buildReason) || (forceCourtesyPush && !taskNameIsSet)) {
             // If CI, we will compare any tasks that have updated versions.
-            console.log("DONE");
+            console.log('DONE');
             //const tasks = await getTasksToBuildForCI();
             setTaskVariables(tasks, tasks);
         } else {
@@ -271,11 +263,10 @@ async function filterTasks () {
                 const tasksForDowngradingCheck = await getTasksToBuildForPR(prId, true);
                 setTaskVariables(tasks, tasksForDowngradingCheck);
             } else if (buildReason == AzpBuildReason.Manual && taskNameIsSet) {
-                const unknownTasks = tasksFromParameter.filter(task => !makeOptions.tasks.includes(task))
+                const unknownTasks = tasksFromParameter.filter(task => !makeOptions.tasks.includes(task));
                 if (unknownTasks.length > 0) {
-                    throw new Error("Can't find" + unknownTasks + "tasks in the make-options.json file.\n" +
-                                   "Please ensure that 'Tasks to build' parameter is specified correctly (e.g. BashV3, AzureCLIV1...).");
-                } 
+                    throw new Error(`Can't find "${unknownTasks}" task(s) in the make-options.json file.`);
+                }
                 setTaskVariables(tasksFromParameter, tasksFromParameter);
             } else {
                 // If other, build everything.
