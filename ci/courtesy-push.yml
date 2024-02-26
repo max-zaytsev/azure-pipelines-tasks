@@ -37,10 +37,8 @@ steps:
 - template: generate-branch-name.yml
 
 - powershell: |
-    # Build the release branch name
-    $currentSprint = $(currentSprint)
-    # "users/$(username)/m" + $currentSprint + "." + $(currentDate) + "/courtesyPush"
-    $releaseBranch = $(branchName)
+    $releaseBranch = "$(branchName)"
+
     Write-Host "Release branch name: $releaseBranch and  $(branchName)"
     Write-Host "Pushing branch to AzureDevOps"
     cd AzureDevOps
