@@ -31,7 +31,7 @@ steps:
 #   displayName: Push Nuget packages
 
 # Set $(currentSprint) and $(currentSprintWeek) variables
-- powershell: ./ci/set-sprint-variables.ps1
+- powershell: ./azure-pipelines-tasks/ci/set-sprint-variables.ps1
   displayName: Set sprint variables
 
 - template: generate-branch-name.yml
