@@ -27,9 +27,9 @@ steps:
 #   inputs:
 #     version: 8.x
 
-# # npm install
-# - script: npm install
-#   displayName: npm install
+# npm install
+- script: npm install
+  displayName: npm install
 
 # # # Verify min agent demands
 # # - script: |
