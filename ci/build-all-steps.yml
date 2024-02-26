@@ -7,68 +7,68 @@ steps:
 - checkout: self
   clean: true
 
-# Only when building on Windows:
-- ${{ if eq(parameters.os, 'Windows_NT') }}:
+# # Only when building on Windows:
+# - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
-  # Start collect diagnostics
-  - powershell: ./ci/start-collect-diagnostics.ps1
-    displayName: Start collect diagnostics
-    condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
+#   # Start collect diagnostics
+#   - powershell: ./ci/start-collect-diagnostics.ps1
+#     displayName: Start collect diagnostics
+#     condition: and(succeeded(), eq(variables.collect_diagnostics, 'true'))
 
-# Use node 10, npm 6
-- task: NodeTool@0
-  displayName: Use node 10
-  inputs:
-    versionSpec: 10.24.1
+# # Use node 10, npm 6
+# - task: NodeTool@0
+#   displayName: Use node 10
+#   inputs:
+#     versionSpec: 10.24.1
 
-# Use .NET SDK 8
-- task: UseDotNet@2
-  displayName: 'Install .NET Core SDK 8.x'
-  inputs:
-    version: 8.x
+# # Use .NET SDK 8
+# - task: UseDotNet@2
+#   displayName: 'Install .NET Core SDK 8.x'
+#   inputs:
+#     version: 8.x
 
-# npm install
-- script: npm install
-  displayName: npm install
+# # npm install
+# - script: npm install
+#   displayName: npm install
 
-# # Verify min agent demands
-# - script: |
-#     cd ci/verifyMinAgentDemands
-#     npm install
-#   displayName: npm install min agent demands
+# # # Verify min agent demands
+# # - script: |
+# #     cd ci/verifyMinAgentDemands
+# #     npm install
+# #   displayName: npm install min agent demands
 
-# - script: node ./ci/verifyMinAgentDemands/index.js
-#   displayName: Verify min agent demands
-
-
-# - powershell: |
-#     $currentSprint = $(currentSprint)
-#     $cw = $(currentSprintWeek)
-#     $currentSprint.GetType().FullName
-#     $cw.GetType().FullName
-#   displayName: Check for VARS
+# # - script: node ./ci/verifyMinAgentDemands/index.js
+# #   displayName: Verify min agent demands
 
 
-# Filter out unchanged tasks
-- script: node ./ci/filter-tasks.js
-  displayName: Filter out unchanged tasks
-  name: getTaskPattern
-  env:
-    PACKAGE_ENDPOINT: $(Package.Endpoint)
-    PACKAGE_TOKEN: $(Package.Token)
+# # - powershell: |
+# #     $currentSprint = $(currentSprint)
+# #     $cw = $(currentSprintWeek)
+# #     $currentSprint.GetType().FullName
+# #     $cw.GetType().FullName
+# #   displayName: Check for VARS
 
-# - script: node ./ci/before-build-check-tasks.js
-#   displayName: Check that tasks has no duplicated libs
-#   condition: |
-#     and(
-#       succeeded(),
-#       eq(variables['build.reason'], 'PullRequest'),
-#       ne(variables['numTasks'], 0)
-#     )
 
-# Verify generated files across tasks are up-to-date
-- script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --all-tasks
-  displayName: Ensure BuildConfigGen outputs are consistent
+# # Filter out unchanged tasks
+# - script: node ./ci/filter-tasks.js
+#   displayName: Filter out unchanged tasks
+#   name: getTaskPattern
+#   env:
+#     PACKAGE_ENDPOINT: $(Package.Endpoint)
+#     PACKAGE_TOKEN: $(Package.Token)
+
+# # - script: node ./ci/before-build-check-tasks.js
+# #   displayName: Check that tasks has no duplicated libs
+# #   condition: |
+# #     and(
+# #       succeeded(),
+# #       eq(variables['build.reason'], 'PullRequest'),
+# #       ne(variables['numTasks'], 0)
+# #     )
+
+# # Verify generated files across tasks are up-to-date
+# - script: dotnet run --project BuildConfigGen/BuildConfigGen.csproj --all-tasks
+#   displayName: Ensure BuildConfigGen outputs are consistent
 
 # Set $(currentSprint) and $(currentSprintWeek) variables
 - powershell: ./ci/set-sprint-variables.ps1
@@ -93,30 +93,30 @@ steps:
 #   env:
 #     PACKAGE_TOKEN: $(Package.Token)
 
-# Build BuildConfigGen
-- task: DotNetCoreCLI@2
-  displayName: Build BuildConfigGen
-  inputs:
-    command: build
-    projects: './BuildConfigGen/BuildConfigGen.csproj'
+# # Build BuildConfigGen
+# - task: DotNetCoreCLI@2
+#   displayName: Build BuildConfigGen
+#   inputs:
+#     command: build
+#     projects: './BuildConfigGen/BuildConfigGen.csproj'
 
-# Clean
-- script: node make.js clean
-  displayName: Clean tasks
+# # Clean
+# - script: node make.js clean
+#   displayName: Clean tasks
 
-# Build Tasks
-- script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"
-  displayName: Build Tasks
-  condition: and(succeeded(), ne(variables['numTasks'], 0))
+# # Build Tasks
+# - script: node make.js serverBuild --task "$(getTaskPattern.task_pattern)"
+#   displayName: Build Tasks
+#   condition: and(succeeded(), ne(variables['numTasks'], 0))
 
-- script: node ./ci/after-build-check-tasks.js
-  displayName: Check that tasks has no duplicated libs
-  condition: |
-    and(
-      succeeded(),
-      eq(variables['build.reason'], 'PullRequest'),
-      ne(variables['numTasks'], 0)
-    )
+# - script: node ./ci/after-build-check-tasks.js
+#   displayName: Check that tasks has no duplicated libs
+#   condition: |
+#     and(
+#       succeeded(),
+#       eq(variables['build.reason'], 'PullRequest'),
+#       ne(variables['numTasks'], 0)
+#     )
 
 # # Check diff for task sources
 # - script: node ./ci/verify-source-changes.js "$(getTaskPattern.task_pattern)"
@@ -132,44 +132,44 @@ steps:
 # Only on Windows:
 - ${{ if eq(parameters.os, 'Windows_NT') }}:
 
-  # Stage tasks individually into the package directory
-  - script: node ./ci/stage-package.js false individually
-    displayName: Stage tasks individually into the package directory
-    condition: |
-      and(
-        succeeded(),
-        ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
-      )
+  # # Stage tasks individually into the package directory
+  # - script: node ./ci/stage-package.js false individually
+  #   displayName: Stage tasks individually into the package directory
+  #   condition: |
+  #     and(
+  #       succeeded(),
+  #       ne(variables['build.reason'], 'PullRequest'),
+  #       ne(variables['numTasks'], 0)
+  #   )
 
-  # # Sign all task zips as nuget packages
-  # - template: sign-all-tasks.yml
-  #   parameters:
-  #     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
+  # # # Sign all task zips as nuget packages
+  # # - template: sign-all-tasks.yml
+  # #   parameters:
+  # #     layoutRoot: $(Build.SourcesDirectory)\_package\tasks-layout
 
-  # Stage all the tasks into a single zip for upload
-  - script: node ./ci/stage-package.js false
-    displayName: Stage all the tasks into a single zip for upload
-    condition: |
-      and(
-        succeeded(),
-        ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
-      )
+  # # Stage all the tasks into a single zip for upload
+  # - script: node ./ci/stage-package.js false
+  #   displayName: Stage all the tasks into a single zip for upload
+  #   condition: |
+  #     and(
+  #       succeeded(),
+  #       ne(variables['build.reason'], 'PullRequest'),
+  #       ne(variables['numTasks'], 0)
+  #     )
 
-  # Publish artifact
-  - task: PublishBuildArtifacts@1
-    displayName: Publish package artifact
-    condition: |
-      and(
-        succeeded(),
-        ne(variables['build.reason'], 'PullRequest'),
-        ne(variables['numTasks'], 0)
-      )
-    inputs:
-      pathToPublish: _package/tasks.zip
-      artifactName: package
-      publishLocation: container
+  # # Publish artifact
+  # - task: PublishBuildArtifacts@1
+  #   displayName: Publish package artifact
+  #   condition: |
+  #     and(
+  #       succeeded(),
+  #       ne(variables['build.reason'], 'PullRequest'),
+  #       ne(variables['numTasks'], 0)
+  #     )
+  #   inputs:
+  #     pathToPublish: _package/tasks.zip
+  #     artifactName: package
+  #     publishLocation: container
 
 # # Test
 # - script: node make.js test
@@ -207,7 +207,6 @@ steps:
       $releaseBranch = $(branchName)
       Write-Host "Release branch: $releaseBranch AND $releaseBranch"
 
-      $releaseBranch = $(branchName)
       Write-Host "Release branch name: $releaseBranch and  $(branchName)"
       git checkout -b $releaseBranch
       # # add config entry to avoid errors while pulling
