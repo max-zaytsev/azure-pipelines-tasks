@@ -10,10 +10,12 @@ if (!releaseBranch) {
     throw new Exception('No release branch provided');
 }
 
-const orgUrl = 'https://dev.azure.com/mseng';
+//const orgUrl = 'https://dev.azure.com/mseng';
+const orgUrl = 'https://dev.azure.com/v-mazayt0';
 const authHandler = azdev.getPersonalAccessTokenHandler(token);
 
-const azureDevOpsRepoId = 'fb240610-b309-4925-8502-65ff76312c40';
+//const azureDevOpsRepoId = 'fb240610-b309-4925-8502-65ff76312c40';
+const azureDevOpsRepoId = '9c3ad327-87b8-470f-aa6b-f6ec5407887b';
 const project = 'AzureDevOps';
 
 const refs = {
