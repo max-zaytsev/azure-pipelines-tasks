@@ -71,7 +71,7 @@ export class azureclitask {
 
             if (failOnStdErr && aggregatedErrorLines.length > 0) {
                 let error = FAIL_ON_STDERR;
-                tl.error(aggregatedErrorLines.join("\n"));
+                tl.error(aggregatedErrorLines.join("\n"), tl.IssueSource.CustomerScript);
                 throw error;
             }
         }
@@ -95,7 +95,19 @@ export class azureclitask {
             if(toolExecutionError === FAIL_ON_STDERR) {
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedStdErr"));
             } else if (toolExecutionError) {
-                tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailed", toolExecutionError));
+                let message = tl.loc("ScriptFailed", toolExecutionError);
+
+                const expiredSecretErrorCode = "AADSTS7000222";
+                let serviceEndpointSecretIsExpired = toolExecutionError.indexOf(expiredSecretErrorCode) >= 0;
+                if (serviceEndpointSecretIsExpired) {
+                    const organizationURL = tl.getVariable('System.CollectionUri');
+                    const projectName = tl.getVariable('System.TeamProject');
+                    const serviceConnectionLink = encodeURI(`${organizationURL}${projectName}/_settings/adminservices?resourceId=${connectedService}`);
+                    
+                    message = tl.loc('ExpiredServicePrincipalMessageWithLink', serviceConnectionLink);
+                }
+
+                tl.setResult(tl.TaskResult.Failed, message);
             } else if (exitCode != 0){
                 tl.setResult(tl.TaskResult.Failed, tl.loc("ScriptFailedWithExitCode", exitCode));
             }
